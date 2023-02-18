@@ -49,3 +49,35 @@ end
   # node.connect? / node.connect?(4) / node.connect('X') == 4 all say 
   # the same thing. the methods are redundant for the basic game but
   # both might be useful for the different return types if we go deeper
+
+  # these can be refactored with a shared helper method for 
+  # finding connection length in a single direction:
+
+  # def count_connections(letter, direction)
+  #   count = 0
+  #   node = self
+  
+  #   until node.nil? || node.display != letter
+  #     count += 1
+  #     node = node.direction
+  #   end
+  
+  #   count
+  # end
+  
+  # def connect?(number = 4, letter = self.display)
+  #   @compass.any? { |direction| count_connections(letter, direction) >= number }
+  # end
+  
+  # def connect(letter = self.display)
+  #   @compass.map { |direction| count_connections(letter, direction) }.max
+  # end
+
+  # ^ thanks, chatGPT. you have to ask it the right questions, 
+  # and verify/modify as necessary, and it'll show you good stuff
+  
+  
+  
+  
+  
+  
