@@ -1,17 +1,17 @@
 class Node
-  attr_reader :letter, :empty, :ne, :e, :se, :s, :sw, :w, :nw
-              
-  def initialize(col, row, board)
+  attr_accessor :ne, :e, :se, :s, :sw, :w, :nw
+  attr_reader :letter, :empty
+
+  def initialize(col, row)
     @letter = '.'
-    @empty = (@letter == '.')
-    @ne = board[col+1][row+1]
-    @e  = board[col+1][row]
-    @se = board[col+1][row-1]
-    @s  = board[col][row-1]
-    @sw = board[col-1][row-1]
-    @w  = board[col-1][row]
-    @nw = board[col-1][row+1]
-    @compass = { ne: sw, e: w, se: nw, s: nil }
+    @empty = (@letter = '.')
+    @ne = nil
+    @e  = nil
+    @se = nil
+    @s  = nil
+    @sw = nil
+    @w  = nil
+    @nw = nil
   end
 
   def count(direction, letter, count = 0)
