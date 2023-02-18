@@ -1,17 +1,9 @@
 class Node
-  attr_reader :display,
-              :empty,
-              :ne,
-              :e,
-              :se,
-              :s,
-              :sw,
-              :w,
-              :nw
+  attr_reader :letter, :empty, :ne, :e, :se, :s, :sw, :w, :nw
               
   def initialize(col, row, board)
-    @display = '.'
-    @empty = (@display == '.')
+    @letter = '.'
+    @empty = (@letter == '.')
     @ne = board[col+1][row+1]
     @e  = board[col+1][row]
     @se = board[col+1][row-1]
@@ -19,33 +11,27 @@ class Node
     @sw = board[col-1][row-1]
     @w  = board[col-1][row]
     @nw = board[col-1][row+1]
-    @compass = [ne, e, se, s, sw, w, nw]
+    @compass = { ne: sw, e: w, se: nw, s: nil }
   end
 
-  def connect?(number = 4, letter = self.display, count = 1)
-    starting_node, node = self, self
-    @compass.each do |direction|
-      until node.direction.nil? || node.direction.display != letter
-        return true if (count += 1) == number
-        node = node.direction
-      count = 1
-      node = starting_node
-      connect = false
+  def count(direction, letter, count = 0)
+    node = self
+    return count unless node&.direction&.letter == letter
+    node.direction.count(direction, letter, count + 1) 
+  end
+
+  def connect(letter = @letter)
+    connex = 0
+    @compass.each do |forth, back|
+      to = count(forth, letter)
+      fro = count(back, letter)
+      total = to + fro + 1
+      connex = [total, connex].max
     end
+    connex
   end
 
-  def connect(letter = self.display)
-    starting_node, node = self, self
-    @compass.map {  |direction|
-      count = 1
-      node = starting_node
-      until node.direction.nil? || node.direction.display != letter
-        count += 1
-        node = node.direction
-      count
-    }.max
+  def connect?(length = 4, letter = @letter)
+    connect(letter) >= length
   end
 end
-  # node.connect? / node.connect?(4) / node.connect('X') == 4 all say 
-  # the same thing. the methods are redundant for the basic game but
-  # both might be useful for the different return types if we go deeper
