@@ -14,13 +14,13 @@ class Node
     @display = '.'
     @empty = (@display == '.')
     @board = board
-    @ne = @board[column+1][row+1]
-    @e = @board[column+1][row]
-    @se = @board[column+1][row-1]
-    @s = @board[column][row-1]
-    @sw = @board[column-1][row-1]
-    @w = @board[column-1][row]
-    @nw = @board[column-1][row+1]
+    @ne = board[column+1][row+1]
+    @e = board[column+1][row]
+    @se = board[column+1][row-1]
+    @s = board[column][row-1]
+    @sw = board[column-1][row-1]
+    @w = board[column-1][row]
+    @nw = board[column-1][row+1]
     @directions = [ne, e, se, s, sw, w, nw]
   end
 
@@ -42,7 +42,7 @@ class Node
     @directions.map {  |direction|
       count = 1
       node = starting_node
-      until node.nil? || node.direction.display != letter
+      until node.direction.nil? || node.direction.display != letter
         count += 1
         node = node.direction
       count
