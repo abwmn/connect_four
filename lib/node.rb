@@ -28,9 +28,8 @@ class Node
     starting_node, node = self, self
     @compass.each do |direction|
       until node.direction.nil? || node.direction.display != letter
-        count += 1
+        return true if (count += 1) == number
         node = node.direction
-        return true if count == number
       count = 1
       node = starting_node
       connect = false
