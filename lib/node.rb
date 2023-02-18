@@ -32,6 +32,6 @@ class Node
   end
 
   def connect?(length = 4, letter = @letter)
-    connex(letter) >= length
+    connect(letter) >= length
   end
 end
