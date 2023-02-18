@@ -1,17 +1,17 @@
-class Node
-  attr_accessor :ne, :e, :se, :s, :sw, :w, :nw
-  attr_reader :letter, :empty
+class Node 
+  attr_reader :letter, :empty, :ne, :e, :se, :s, :sw, :w, :nw
 
-  def initialize(col, row)
+  def initialize(col, row, board)
     @letter = '.'
-    @empty = (@letter = '.')
-    @ne = nil
-    @e  = nil
-    @se = nil
-    @s  = nil
-    @sw = nil
-    @w  = nil
-    @nw = nil
+    @empty = (@letter == '.')
+    @grid = board.grid
+    @ne ||= @grid[col+1][row+1] if @grid[col+1]
+    @e  ||= @grid[col+1][row] if @grid[col+1]
+    @se ||= @grid[col+1][row-1] if @grid[col+1]
+    @s  ||= @grid[col][row-1] if @grid[col]
+    @sw ||= @grid[col-1][row-1] if @grid[col-1]
+    @w ||= @grid[col-1][row] if @grid[col-1]
+    @nw ||= @grid[col-1][row+1] if @grid[col-1]
   end
 
   def count(direction, letter, count = 0)
