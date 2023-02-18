@@ -1,7 +1,6 @@
 class Node
   attr_reader :display,
               :empty,
-              :board,
               :ne,
               :e,
               :se,
@@ -10,17 +9,16 @@ class Node
               :w,
               :nw
               
-  def initialize(column, row, board)
+  def initialize(col, row, board)
     @display = '.'
     @empty = (@display == '.')
-    @board = board
-    @ne = board[column+1][row+1]
-    @e = board[column+1][row]
-    @se = board[column+1][row-1]
-    @s = board[column][row-1]
-    @sw = board[column-1][row-1]
-    @w = board[column-1][row]
-    @nw = board[column-1][row+1]
+    @ne = board[col+1][row+1]
+    @e  = board[col+1][row]
+    @se = board[col+1][row-1]
+    @s  = board[col][row-1]
+    @sw = board[col-1][row-1]
+    @w  = board[col-1][row]
+    @nw = board[col-1][row+1]
     @compass = [ne, e, se, s, sw, w, nw]
   end
 
