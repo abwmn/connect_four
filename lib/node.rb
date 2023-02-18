@@ -1,6 +1,6 @@
 class Node 
   attr_accessor :letter
-  attr_reader :letter, :ne, :e, :se, :s, :sw, :w, :nw
+  attr_reader :ne, :e, :se, :s, :sw, :w, :nw
 
   def initialize(col, row, board)
     @letter = '.'
@@ -12,8 +12,9 @@ class Node
     @sw ||= @grid[col-1][row-1] if @grid[col-1]
     @w ||= @grid[col-1][row] if @grid[col-1]
     @nw ||= @grid[col-1][row+1] if @grid[col-1]
-    @compass = {ne: sw, e: w, se: nw, s: nil}
   end
+
+  compass = {ne: sw, e: w, se: nw, s: nil}
 
   def empty?
     @letter == '.'
@@ -27,7 +28,7 @@ class Node
 
   def connect(letter = @letter)
     connex = 0
-    @compass.each do |forth, back|
+    compass.each do |forth, back|
       to = count(forth, letter)
       fro = count(back, letter)
       total = to + fro + 1
