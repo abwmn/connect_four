@@ -28,8 +28,8 @@ class Board
     end
   end
 
-  def place(col = rand(0..6), letter)
-    placement = @grid.col.find {|node| node.letter == '.'}
-    placement.letter == "#{letter}"
+  def place(letter, col)
+    placement = @grid[col].find {|node| node.empty?}
+    placement.letter = letter
   end
 end
