@@ -21,12 +21,12 @@ class Node
     @sw = board[column-1][row-1]
     @w = board[column-1][row]
     @nw = board[column-1][row+1]
-    @directions = [ne, e, se, s, sw, w, nw]
+    @compass = [ne, e, se, s, sw, w, nw]
   end
 
   def connect?(number, letter, count = 1)
     starting_node, node = self, self
-    @directions.each do |direction|
+    @compass.each do |direction|
       until node.direction.nil? || node.direction.display != letter
         count += 1
         node = node.direction
@@ -39,7 +39,7 @@ class Node
 
   def connect(letter)
     starting_node, node = self, self
-    @directions.map {  |direction|
+    @compass.map {  |direction|
       count = 1
       node = starting_node
       until node.direction.nil? || node.direction.display != letter
