@@ -1,6 +1,6 @@
-class Node 
+class Node
+  attr_reader   :ne, :e, :se, :s, :sw, :w, :nw
   attr_accessor :letter
-  attr_reader :ne, :e, :se, :s, :sw, :w, :nw
 
   def initialize(col, row, board)
     @letter = '.'
