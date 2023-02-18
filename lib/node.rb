@@ -1,9 +1,9 @@
 class Node
-  attr_reader :display, :empty, :ne, :e, :se, :s, :sw, :w, :nw
+  attr_reader :letter, :empty, :ne, :e, :se, :s, :sw, :w, :nw
               
   def initialize(col, row, board)
-    @display = '.'
-    @empty = (@display == '.')
+    @letter = '.'
+    @empty = (@letter == '.')
     @ne = board[col+1][row+1]
     @e  = board[col+1][row]
     @se = board[col+1][row-1]
@@ -15,25 +15,25 @@ class Node
   end
 
   #recursive
-  def count_links(direction, letter, count = 0)
-    next_node = self.direction
-    return count if next_node.nil? || next_node.display != letter
-    next_node.count_links(direction, letter, count + 1) 
+  def count(direction, letter, count = 0)
+    node = self
+    return count unless node&.direction&.letter == letter
+    node.direction.count(direction, letter, count + 1) 
   end
 
-  def connect(letter = @display)
-    links = 0
-    @compass.each do |direction, opposite|
-      to = count_links(direction, letter)
-      fro = count_links(opposite, letter)
+  def connect(letter = @letter)
+    connex = 0
+    @compass.each do |forth, back|
+      to = count(forth, letter)
+      fro = count(back, letter)
       total = to + fro + 1
-      links = [total, links].max
+      connex = [total, connex].max
     end
-    links
+    connex
   end
 
-  def connect?(length = 4, letter = @display)
-    connect(letter) >= length
+  def connect?(length = 4, letter = @letter)
+    connex(letter) >= length
   end
 end
 
@@ -43,7 +43,7 @@ end
   # def count_connections(direction, letter)
   #   count = 0
   #   node = self
-  #   while node && node.direction && node.direction.display == letter
+  #   while node && node.direction && node.direction.letter == letter
   #     node = node.direction
   #     count += 1
   #   end
@@ -55,7 +55,7 @@ end
   #   count = 0
   #   node = self
   #   while (node = node.direction)
-  #     if node.display == letter
+  #     if node.letter == letter
   #       count += 1
   #     else
   #       break
@@ -66,10 +66,10 @@ end
 
 ##############
 ### old unidirectional methods
-  # def connect?(number = 4, letter = self.display, count = 1)
+  # def connect?(number = 4, letter = self.letter, count = 1)
   #   starting_node, node = self, self
   #   @compass.each do |direction|
-  #     until node.direction.nil? || node.direction.display != letter
+  #     until node.direction.nil? || node.direction.letter != letter
   #       return true if (count += 1) == number
   #       node = node.direction
   #     count = 1
@@ -78,12 +78,12 @@ end
   #   end
   # end
 
-  # def connect(letter = self.display)
+  # def connect(letter = self.letter)
   #   starting_node, node = self, self
   #   @compass.map {  |direction|
   #     count = 1
   #     node = starting_node
-  #     until node.direction.nil? || node.direction.display != letter
+  #     until node.direction.nil? || node.direction.letter != letter
   #       count += 1
   #       node = node.direction
   #     count
@@ -101,7 +101,7 @@ end
   #   count = 0
   #   node = self
   
-  #   until node.nil? || node.display != letter
+  #   until node.nil? || node.letter != letter
   #     count += 1
   #     node = node.direction
   #   end
@@ -109,11 +109,11 @@ end
   #   count
   # end
   
-  # def connect?(number = 4, letter = self.display)
+  # def connect?(number = 4, letter = self.letter)
   #   @compass.any? { |direction| count_connections(letter, direction) >= number }
   # end
   
-  # def connect(letter = self.display)
+  # def connect(letter = self.letter)
   #   @compass.map { |direction| count_connections(letter, direction) }.max
   # end
 
