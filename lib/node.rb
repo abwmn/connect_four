@@ -15,13 +15,31 @@ class Node
   end
 
   #recursive
-  def count_connections(direction, letter, count = 0)
+  def count_links(direction, letter, count = 0)
     next_node = self.direction
     return count if next_node.nil? || next_node.display != letter
-    next_node.count_connections(direction, letter, count + 1) 
+    next_node.count_links(direction, letter, count + 1) 
   end
 
-  # iterative
+  def connect(letter = @display)
+    links = 0
+    @compass.each do |direction, opposite|
+      to = count_links(direction, letter)
+      fro = count_links(opposite, letter)
+      total = to + fro + 1
+      links = [total, links].max
+    end
+    links
+  end
+
+  def connect?(length = 4, letter = @display)
+    connect(letter) >= length
+  end
+end
+
+#########################
+
+# iterative
   # def count_connections(direction, letter)
   #   count = 0
   #   node = self
@@ -32,24 +50,22 @@ class Node
   #   count
   # end
 
-  def connect(letter = @display)
-    max_count = 0
-    @compass.each do |direction, opposite|
-      count = count_connections(direction, letter)
-      opposite_count = count_connections(opposite, letter)
-      total_count = count + opposite_count + 1
-      max_count = [max_count, total_count].max
-    end
-    max_count
-  end
+#iterative v2
+ # def count_connections(direction, letter)
+  #   count = 0
+  #   node = self
+  #   while (node = node.direction)
+  #     if node.display == letter
+  #       count += 1
+  #     else
+  #       break
+  #     end
+  #   end
+  #   count
+  # end
 
-  def connect?(length = 4, letter = @display)
-    connect(letter) >= length
-  end
-end
-
-
-
+##############
+### old unidirectional methods
   # def connect?(number = 4, letter = self.display, count = 1)
   #   starting_node, node = self, self
   #   @compass.each do |direction|
