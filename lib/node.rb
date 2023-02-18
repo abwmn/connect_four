@@ -9,12 +9,10 @@ class Node
               :w,
               :nw
               
-  def initialize(column, row)
+  def initialize(column, row, board)
     @display = '.'
     @empty = (@display == '.')
-    # @column = column
-    # @row = row
-    @directions = [ne, e, se, s, sw, w, nw]
+    @board = board
     @ne = @board[column+1][row+1]
     @e = @board[column+1][row]
     @se = @board[column+1][row-1]
@@ -22,31 +20,28 @@ class Node
     @sw = @board[column-1][row-1]
     @w = @board[column-1][row]
     @nw = @board[column-1][row+1]
+    @directions = [ne, e, se, s, sw, w, nw]
   end
-  
-  def connect?(number, letter)
-    count = 1
-    starting_node, node = self
+
+  def connect?(number, letter, count = 1)
+    starting_node, node = self, self
     @directions.each do |direction|
-      until node.direction.display != letter
+      until node.direction.nil? || node.direction.display != letter
         count += 1
         node = node.direction
-      if count == number
-        return true
-      else 
-        count = 1
-        node = starting_node
-        connect = false
-      end
+        return true if count == number
+      count = 1
+      node = starting_node
+      connect = false
     end
   end
 
   def connect(letter)
-    starting_node, node = self
-    directions.map {  |direction|
-      node = starting_node
+    starting_node, node = self, self
+    @directions.map {  |direction|
       count = 1
-      until node.direction.display != letter
+      node = starting_node
+      until node.nil? || node.direction.display != letter
         count += 1
         node = node.direction
       count
