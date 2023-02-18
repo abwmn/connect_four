@@ -27,7 +27,7 @@ class Node
 
   def connect(letter = @letter)
     connex = 0
-    compass.each do |forth, back|
+    @compass.each do |forth, back|
       to = count(forth, letter)
       fro = count(back, letter)
       total = to + fro + 1
