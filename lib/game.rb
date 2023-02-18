@@ -24,6 +24,7 @@ class Game
   end
   
   def play
+    result = ''
     @board = Board.new
     until game_over 
       @board.render
@@ -46,7 +47,17 @@ class Game
         puts "Invalid input"
         play
       end
+      puts "The computer will now play a most cunning move."
       board.places("O")
+    end
+    if result == 'X'
+      puts "You Win!"
+    elsif result == 'O'
+      puts "You lose!"
+    elsif result == 'draw' 
+      puts "Tie game!"
+    else
+     puts "error: invalid end of game"
     end
   end
 end
