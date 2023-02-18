@@ -1,6 +1,7 @@
 class Node
   attr_reader :display,
               :empty,
+              :board,
               :ne,
               :e,
               :se,
