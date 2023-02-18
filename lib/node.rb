@@ -10,7 +10,7 @@ class Node
     @se ||= @grid[col+1][row-1] if @grid[col+1]
     @s  ||= @grid[col][row-1] if @grid[col]
     @sw ||= @grid[col-1][row-1] if @grid[col-1]
-    @w ||= @grid[col-1][row] if @grid[col-1]
+    @w  ||= @grid[col-1][row] if @grid[col-1]
     @nw ||= @grid[col-1][row+1] if @grid[col-1]
   end
 
