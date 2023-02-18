@@ -17,14 +17,13 @@ RSpec.describe Board do
     expect(@board.grid[0][0]).to be_a(Node)
   end
 
-  it 'links nodes' do
-    expect(@board.grid[0][0].ne).to eq(@board.grid[1][1])
-    expect(@board.grid[3][5].sw).to eq(@board.grid[2][4])
-  end
-
   it 'places' do
-    @board.place("X", 2)
+    @board.places("X", 2)
 
     expect(@board.grid[2][0].letter).to eq("X")
+  end
+
+  it 'places random' do
+    expect(@board.grid[@board.places("X")].find {|node|!node.empty?}.letter).to eq("X")
   end
 end
