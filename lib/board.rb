@@ -27,4 +27,9 @@ class Board
       end
     end
   end
+
+  def place(col = rand(0..6), letter)
+    placement = @grid.col.find {|node| node.letter == '.'}
+    placement.letter == "#{letter}"
+  end
 end
