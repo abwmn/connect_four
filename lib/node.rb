@@ -1,9 +1,9 @@
 class Node 
-  attr_reader :letter, :empty, :ne, :e, :se, :s, :sw, :w, :nw
+  attr_accessor :letter
+  attr_reader :letter, :ne, :e, :se, :s, :sw, :w, :nw
 
   def initialize(col, row, board)
     @letter = '.'
-    @empty = (@letter == '.')
     @grid = board.grid
     @ne ||= @grid[col+1][row+1] if @grid[col+1]
     @e  ||= @grid[col+1][row] if @grid[col+1]
