@@ -48,6 +48,7 @@ class Game
         play
       end
       puts "The computer will now play a most cunning move."
+      sleep(2)
       board.places("O")
     end
     if result == 'X'
