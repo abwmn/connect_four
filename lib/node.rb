@@ -1,10 +1,9 @@
 class Node
   attr_accessor :ne, :e, :se, :s, :sw, :w, :nw
-  attr_reader :letter, :empty
+  attr_reader :letter
 
   def initialize(col, row)
     @letter = '.'
-    @empty = (@letter = '.')
     @ne = nil
     @e  = nil
     @se = nil
@@ -12,6 +11,10 @@ class Node
     @sw = nil
     @w  = nil
     @nw = nil
+  end
+
+  def empty?
+    @letter == '.'
   end
 
   def count(direction, letter, count = 0)
