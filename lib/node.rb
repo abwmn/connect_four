@@ -24,7 +24,7 @@ class Node
     @compass = [ne, e, se, s, sw, w, nw]
   end
 
-  def connect?(number, letter, count = 1)
+  def connect?(number = 4, letter = self.display, count = 1)
     starting_node, node = self, self
     @compass.each do |direction|
       until node.direction.nil? || node.direction.display != letter
@@ -36,7 +36,7 @@ class Node
     end
   end
 
-  def connect(letter)
+  def connect(letter = self.display)
     starting_node, node = self, self
     @compass.map {  |direction|
       count = 1
@@ -48,3 +48,6 @@ class Node
     }.max
   end
 end
+  # node.connect? / node.connect?(4) / node.connect('X') == 4 all say 
+  # the same thing. the methods are redundant for the basic game but
+  # both might be useful for the different return types if we go deeper
