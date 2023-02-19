@@ -1,8 +1,9 @@
 require 'spec_helper'
 
 RSpec.describe Board do
-  before(:each) do 
-    @board = Board.new
+  before(:each) do
+    @game = Game.new
+    @board = @game.board
   end
 
   it 'exists' do
@@ -10,7 +11,7 @@ RSpec.describe Board do
   end
 
   it 'has a grid hash' do  
-    expect(@board.grid).to be_a(Hash)
+    expect(@board.grid).to be_an(Array)
   end
 
   it 'is full of nodes' do
@@ -25,5 +26,7 @@ RSpec.describe Board do
 
   it 'places random' do
     expect(@board.grid[@board.places("X")].find {|node|!node.empty?}.letter).to eq("X")
+    @game.start
   end
+
 end
