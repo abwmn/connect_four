@@ -1,33 +1,32 @@
 class Node
-  attr_reader   :ne, :e, :se, :s, :sw, :w, :nw
-  attr_accessor :letter
-
-  def initialize(col, row, board)
+  attr_accessor :letter, :n, :ne, :e, :se, :s, :sw, :w, :nw
+  
+  def initialize
     @letter = '.'
-    @grid = board.grid
-    @ne ||= @grid[col+1][row+1] if @grid[col+1]
-    @e  ||= @grid[col+1][row] if @grid[col+1]
-    @se ||= @grid[col+1][row-1] if @grid[col+1]
-    @s  ||= @grid[col][row-1] if @grid[col]
-    @sw ||= @grid[col-1][row-1] if @grid[col-1]
-    @w  ||= @grid[col-1][row] if @grid[col-1]
-    @nw ||= @grid[col-1][row+1] if @grid[col-1]
-    @compass = {ne: sw, e: w, se: nw, s: nil}
+    @n = nil
+    @ne = nil
+    @e = nil
+    @se = nil
+    @s = nil
+    @sw = nil
+    @w = nil
+    @nw = nil
   end
 
   def empty?
     @letter == '.'
   end
 
-  def count(direction, letter, count = 0)
+  def count(direction, letter = @letter, count = 0)
     node = self
-    return count unless node&.direction&.letter == letter
-    node.direction.count(direction, letter, count + 1) 
+    return count unless node&.send(direction)&.letter == letter
+    node.send(direction).count(direction, letter, count + 1)
   end
 
   def connect(letter = @letter)
+    compass = {'ne'=>'sw', 'se'=>'nw', 'e'=>'w', 's'=>'n'}
     connex = 0
-    @compass.each do |forth, back|
+    compass.each do |forth, back|
       to = count(forth, letter)
       fro = count(back, letter)
       total = to + fro + 1
