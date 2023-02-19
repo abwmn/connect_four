@@ -36,12 +36,23 @@ class Game
     end
   end
 
+  def play
+    @under = true
+    until @under == false
+      @board.render
+      @game.prompt #@board.places(player)
+      @board.render("\nThe computer will now play a most cunning move.")
+      sleep(2)
+      @board.places("O")
+    end
+  end
+
   def prompt
     puts "Place your X!"
     col = gets.chomp
-    if col.downcase == 'a' && @grid[0][5].empty?
+    if col.downcase    == 'a' && @grid[0][5].empty?
       col = 0
-    elsif col.downcase == 'b'&& @grid[1][5].empty?
+    elsif col.downcase == 'b' && @grid[1][5].empty?
       col = 1
     elsif col.downcase == 'c' && @grid[2][5].empty?
       col = 2
@@ -69,16 +80,6 @@ class Game
     @board.clear
     playorquit
   end
-  
-  def play
-    @under = true
-    until @under == false
-      @board.render
-      @game.prompt #@board.places(player)
-      @board.render("\nThe computer will now play a most cunning move.")
-      sleep(2)
-      @board.places("O")
-    end
     # if result == 'X'
     #   puts "You Win!"
     # elsif result == 'O'
@@ -88,5 +89,4 @@ class Game
     # else
     #  puts "error: invalid end of game"
     # end
-  end
 end
