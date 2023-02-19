@@ -10,7 +10,6 @@ class Game
     @board = Board.new(self)
     @grid = @board.grid
     @result = ''
-    @p_or_q = 'q'
   end
 
   def start
@@ -40,7 +39,7 @@ class Game
     @under = true
     until @under == false
       @board.render
-      @game.prompt #@board.places(player)
+      prompt #@board.places(player)
       @board.render("\nThe computer will now play a most cunning move.")
       sleep(2)
       @board.places("O")
