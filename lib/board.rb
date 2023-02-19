@@ -15,26 +15,26 @@ class Board
         if col > 0
           @grid[col][row].w = @grid[col-1][row]
           if row > 0
-            @grid[col][row].nw = @grid[col-1][row-1]
+            @grid[col][row].sw = @grid[col-1][row-1]
           end
           if row < 5
-            @grid[col][row].sw = @grid[col-1][row+1]
+            @grid[col][row].nw = @grid[col-1][row+1]
           end
         end
         if col < 6
           @grid[col][row].e = @grid[col+1][row]
           if row > 0
-            @grid[col][row].ne = @grid[col+1][row-1]
+            @grid[col][row].se = @grid[col+1][row-1]
           end
           if row < 5
-            @grid[col][row].se = @grid[col+1][row+1]
+            @grid[col][row].ne = @grid[col+1][row+1]
           end
         end
         if row > 0
-          @grid[col][row].n = @grid[col][row-1]
+          @grid[col][row].s = @grid[col][row-1]
         end
         if row < 5
-          @grid[col][row].s = @grid[col][row+1]
+          @grid[col][row].n = @grid[col][row+1]
         end
       end
     end
