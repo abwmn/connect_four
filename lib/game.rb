@@ -2,28 +2,35 @@ require './spec/spec_helper'
 
 class Game
   attr_reader :board, :game, :grid
-  attr_accessor :over
+  attr_accessor :under
 
   def initialize
     @game = self
+    @under = true
     @board = Board.new(self)
     @grid = @board.grid
     @result = ''
   end
 
   def start
+    puts "\e[H\e[2J"
     puts "Welcome to Connect 4!"
+    sleep(2)
     playorquit
   end
 
   def playorquit
+    puts "\e[H\e[2J"
     puts "Enter p to play, or q to quit!"
     p_or_q = gets.chomp
     if p_or_q.downcase == 'p'
+      puts "\e[H\e[2J"
       puts "Let the games begin!"
       play
     elsif p_or_q.downcase == 'q'
+      puts "\e[H\e[2J"
       puts "See you next time!"
+      #quit
     else
       playorquit
     end
@@ -47,8 +54,10 @@ class Game
     elsif col.downcase == 'g' && @grid[6][5].empty?
       @board.places("X", 6)
     else 
-      puts "Invalid input"
-      self.prompt
+      puts "\e[H\e[2J"
+      puts "Invalid input, try again."
+      @board.render
+      prompt
     end
   end
 
@@ -57,18 +66,24 @@ class Game
   # end
 
   def over
+    @under = false
+    puts "\e[H\e[2J"
     @board.render("Oh snap! Good game!")
-    self.playorquit
+    sleep(3)
+    playorquit
   end
   
   def play
     @board.clear
-    (0..40).each do
+    puts "\e[H\e[2J"
+    (0..42).each do
       @board.render
       @game.prompt
+      puts "\e[H\e[2J"
       @board.render
       puts "The computer will now play a most cunning move."
-      sleep(1)
+      sleep(2)
+      puts "\e[H\e[2J"
       @board.places("O")
     end
     if result == 'X'
