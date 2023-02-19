@@ -13,7 +13,7 @@ class Game
 
   def start
     puts "Welcome to Connect 4!"
-    self.playorquit
+    playorquit
   end
 
   def playorquit
@@ -21,11 +21,11 @@ class Game
     p_or_q = gets.chomp
     if p_or_q.downcase == 'p'
       puts "Let the games begin!"
-      self.play
-    elsif self.gets("q") || self.gets("Q")
+      play
+    elsif p_or_q.downcase == 'q'
       puts "See you next time!"
     else
-      self.playorquit
+      playorquit
     end
   end
 
@@ -68,7 +68,7 @@ class Game
       @game.prompt
       @board.render
       puts "The computer will now play a most cunning move."
-      sleep(2)
+      sleep(1)
       @board.places("O")
     end
     if result == 'X'
