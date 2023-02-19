@@ -32,26 +32,6 @@ class Board
     end
   end
 
-  def places(letter, col = rand(0..6))
-    until @grid[col].find {|node| node.empty?}
-      col = rand(0..6)
-    end
-    node = @grid[col].find {|node| node.empty?}
-    node.letter = letter
-    if node.connect?(4) || full?
-      @game.over
-    end
-    col
-  end
-
-  def place(letter, col)
-    node = @grid[col].find {|node| node.empty?}
-    node.letter = letter
-    if node.connect?(4) || full?
-      @game.over
-    end
-  end
-
   def render(message='')
     puts "\e[H\e[2J"
     puts 'A B C D E F G'
@@ -64,6 +44,20 @@ class Board
         holder.clear
     end
     puts message
+  end
+
+  def place(letter, col = rand(0..6))
+    until @grid[col].find {|node| node.empty?}
+      col = rand(0..6)
+    end
+    node = @grid[col].find {|node| node.empty?}
+    node.letter = letter
+    if node.connect?(4) 
+      @game.over(letter)
+    elsif full?
+      @game.over('draw')
+    end
+    col
   end
 
   def full?
@@ -83,3 +77,11 @@ class Board
     end
   end
 end
+
+# def place(letter, col)
+#   node = @grid[col].find {|node| node.empty?}
+#   node.letter = letter
+#   if node.connect?(4) || full?
+#     @game.over
+#   end
+# end
