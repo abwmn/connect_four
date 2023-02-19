@@ -1,4 +1,5 @@
 require_relative 'node'
+
 class Board
   attr_reader :grid
   
@@ -9,32 +10,22 @@ class Board
         @grid[col][row] = Node.new
       end
     end
-    
+
     (0..6).each do |col|
       (0..5).each do |row|
-        if col > 0
-          @grid[col][row].w = @grid[col-1][row]
-          if row > 0
-            @grid[col][row].sw = @grid[col-1][row-1]
-          end
-          if row < 5
-            @grid[col][row].nw = @grid[col-1][row+1]
-          end
-        end
+        node = @grid[col][row]
         if col < 6
-          @grid[col][row].e = @grid[col+1][row]
-          if row > 0
-            @grid[col][row].se = @grid[col+1][row-1]
-          end
-          if row < 5
-            @grid[col][row].ne = @grid[col+1][row+1]
-          end
+          node.e  = @grid[col+1][row]   
+          node.se = @grid[col+1][row-1] unless row < 1
+          node.ne = @grid[col+1][row+1] unless row > 4
         end
         if row > 0
-          @grid[col][row].s = @grid[col][row-1]
+          node.s  = @grid[col][row-1]
         end
-        if row < 5
-          @grid[col][row].n = @grid[col][row+1]
+        if col > 0
+          node.w  = @grid[col-1][row]
+          node.sw = @grid[col-1][row-1] unless row < 1
+          node.nw = @grid[col-1][row+1] unless row > 4
         end
       end
     end
