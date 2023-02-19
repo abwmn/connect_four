@@ -1,46 +1,32 @@
 class Node
-  attr_reader   :ne, :e, :se, :s, :sw, :w, :nw
-  attr_accessor :letter
-
-  def initialize(col, row, board)
+  attr_accessor :letter, :n, :ne, :e, :se, :s, :sw, :w, :nw
+  
+  def initialize
     @letter = '.'
-    @col = col
-    @row = row
-    @grid = board.grid
-    @ne = @grid[@col+1] ? @grid[@col+1][@row+1] : nil
-    # @e  = @grid[@col+1] ? @grid[@col+1][@row] : nil
-    # @se = @grid[@col+1] ? @grid[@col+1][@row-1] : nil
-    # @s  = @grid[@col] ?   @grid[@col][@row-1] : nil
-    # @sw = @grid[@col-1] ? @grid[@col-1][@row-1] : nil
-    # @w  = @grid[@col-1] ? @grid[@col-1][@row] : nil
-    # @nw = @grid[@col-1] ? @grid[@col-1][@row+1] : nil
-  end
-
-  def link_up
-    @ne = @grid[@col+1] ? @grid[@col+1][@row+1] : nil
-    # @e  = @grid[@col+1] ? @grid[@col+1][@row] : nil
-    # @se = @grid[@col+1] ? @grid[@col+1][@row-1] : nil
-    # @s  = @grid[@col] ?   @grid[@col][@row-1] : nil
-    # @sw = @grid[@col-1] ? @grid[@col-1][@row-1] : nil
-    # @w  = @grid[@col-1] ? @grid[@col-1][@row] : nil
-    # @nw = @grid[@col-1] ? @grid[@col-1][@row+1] : nil
+    @n = nil
+    @ne = nil
+    @e = nil
+    @se = nil
+    @s = nil
+    @sw = nil
+    @w = nil
+    @nw = nil
   end
 
   def empty?
     @letter == '.'
   end
 
-  def count(direction, letter, count = 0)
-    link_up
+  def count(direction, letter = @letter, count = 0)
     node = self
-    return count unless node&.direction&.letter == letter
-    node.direction.count(direction, letter, count + 1) 
+    return count unless node&.send(direction)&.letter == letter
+    node.send(direction).count(direction, letter, count + 1)
   end
 
   def connect(letter = @letter)
-    link_up
+    compass = {'ne'=>'sw', 'se'=>'nw', 'e'=>'w', 's'=>'n'}
     connex = 0
-    @compass.each do |forth, back|
+    compass.each do |forth, back|
       to = count(forth, letter)
       fro = count(back, letter)
       total = to + fro + 1
