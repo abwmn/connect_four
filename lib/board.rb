@@ -1,3 +1,4 @@
+require_relative 'node'
 class Board
   attr_reader :grid
 
