@@ -44,12 +44,12 @@ class Game
   end
 
   def prompt
-    column_indexes = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6 }
+    columns = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6 }
     loop do
       print "Place your X!\n"
       letter = gets.chomp.downcase
-      if column_indexes.key?(letter) && @grid[column_indexes[letter]][5].empty?
-        return column_indexes[letter]
+      if columns.key?(letter) && @grid[columns[letter]][5].empty?
+        return columns[letter]
       else
         puts "\e[H\e[2J"
         @board.render("\nInvalid input. ")
@@ -60,13 +60,12 @@ class Game
   def over(winner)
     @under = false
     @result = winner
-    message = case
-      when winner == 'X'
-        "You win!"
-      when winner == 'O'
-        "You lose!"
-      when @result == 'draw'
-        "Tie game!"
+    message = if winner == 'X'
+      "You win!"
+    elsif wnner == 'O'
+      "You lose!"
+    elsif @result == 'draw'
+      "Tie game!"
     end
     @board.render("\nOh snap! #{message}\n\nGood game!")
     sleep(3)
