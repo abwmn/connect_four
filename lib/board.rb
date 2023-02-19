@@ -36,18 +36,18 @@ class Board
     until @grid[col].find {|node| node.empty?}
       col = rand(0..6)
     end
-    placement = @grid[col].find {|node| node.empty?}
-    placement.letter = letter
-    if placement.connect?(4) || self.full?
+    node = @grid[col].find {|node| node.empty?}
+    node.letter = letter
+    if node.connect?(4) || full?
       @game.over
     end
     col
   end
 
   def place(letter, col)
-    placement = @grid[col].find {|node| node.empty?}
-    placement.letter = letter
-    if placement.connect?(4) || self.full?
+    node = @grid[col].find {|node| node.empty?}
+    node.letter = letter
+    if node.connect?(4) || full?
       @game.over
     end
   end
