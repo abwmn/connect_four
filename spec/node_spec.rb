@@ -28,14 +28,18 @@ RSpec.describe do
 
   it 'can count' do
     # require 'pry'; binding.pry
-    expect(@node.count("se")).to eq(3)
-    expect(@node.count("se", 'x')).to eq(0)
+    expect(@node.count('se')).to eq(3)
+    expect(@node.count('se', 'x')).to eq(0)
     @node.se.letter='X'
+    expect(@node.connect('X')).to eq(2)
+    @node.letter = 'X'
+    @node.nw.letter = 'X'
     @board.render
     expect(@node.count('se', 'X')).to eq(1)
-    expect(@node.connect('X')).to eq(2)
     expect(@node.connect('.') > 4)
-    expect(@node.connect?).to eq(true)
+    expect(@node.connect('X')). to eq(3)
+    expect(@node.connect?).to eq(false)
+    expect(@node.connect?(4, '.')).to eq(true)
     expect(@node.connect?(4, 'O')).to eq(false)
   end
 end
