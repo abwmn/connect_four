@@ -3,7 +3,8 @@ require_relative 'node'
 class Board
   attr_reader :grid
   
-  def initialize
+  def initialize(game=nil)
+    @game = game
     @grid = Array.new(7) { Array.new(6) }
     (0..6).each do |col|
       (0..5).each do |row|
@@ -31,18 +32,27 @@ class Board
     end
   end
 
-  def places(l, col = rand(0..6))
+  def places(letter, col = rand(0..6))
+    until @grid[col].find {|node| node.empty?}
+      col = rand(0..6)
+    end
     placement = @grid[col].find {|node| node.empty?}
-    placement.letter = l
+    placement.letter = letter
+    if placement.connect?(4) || self.full?
+      @game.over
+    end
     col
   end
 
   def place(letter, col)
     placement = @grid[col].find {|node| node.empty?}
     placement.letter = letter
+    if placement.connect?(4) || self.full?
+      @game.over
+    end
   end
 
-  def render
+  def render(message='')
     puts 'A B C D E F G'
     holder = []
     (0..5).reverse_each do |row|
@@ -51,6 +61,24 @@ class Board
      end
         puts holder.join(" ")
         holder.clear
+    end
+    puts message
+  end
+
+  def full?
+    (0..6).each do |col|
+      (0..5).each do |row|
+        return false if @grid[col][row].letter == '.'
+      end
+    end
+    true
+  end
+
+  def clear
+    (0..6).each do |col|
+      (0..5).each do |row|
+        @grid[col][row].letter = '.'
+      end
     end
   end
 end
