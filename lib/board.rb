@@ -53,6 +53,7 @@ class Board
   end
 
   def render(message='')
+    # system clea
     puts 'A B C D E F G'
     holder = []
     (0..5).reverse_each do |row|
