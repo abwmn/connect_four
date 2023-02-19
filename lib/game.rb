@@ -60,16 +60,15 @@ class Game
   def over(winner)
     @under = false
     @result = winner
-    @board.render("\nOh snap! Good game!")
-    if winner == 'X'
-      puts "You Win!"
-    elsif winner == 'O'
-      puts "You lose!"
-    elsif @result == 'draw' 
-      puts "Tie game!"
-    else
-      puts "error: invalid end of game"
+    message = case
+      when winner == 'X'
+        "You win!"
+      when winner == 'O'
+        "You lose!"
+      when @result == 'draw'
+        "Tie game!"
     end
+    @board.render("\nOh snap! #{message}\n\nGood game!")
     sleep(3)
     playorquit
   end
