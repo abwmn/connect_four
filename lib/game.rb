@@ -22,6 +22,7 @@ class Game
   def playorquit
     puts "\e[H\e[2J"
     puts "Enter p to play, or q to quit!"
+    p_or_q = nil
     p_or_q = gets.chomp
     if p_or_q.downcase == 'p'
       puts "\e[H\e[2J"
@@ -70,11 +71,12 @@ class Game
     puts "\e[H\e[2J"
     @board.render("Oh snap! Good game!")
     sleep(3)
+    @board.clear
     playorquit
   end
   
   def play
-    @board.clear
+    @under = true
     puts "\e[H\e[2J"
     (0..42).each do
       @board.render
