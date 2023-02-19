@@ -53,7 +53,7 @@ class Board
   end
 
   def render(message='')
-    # system clea
+    puts "\e[H\e[2J"
     puts 'A B C D E F G'
     holder = []
     (0..5).reverse_each do |row|
