@@ -24,11 +24,11 @@ class Game
     puts "\e[H\e[2J"
     puts "Enter p to play, or q to quit!"
     answer = gets.chomp
-    if answer == 'p'
+    if answer.downcase == 'p'
       puts "\e[H\e[2J"
       puts "Let the games begin!"
       play
-    elsif answer == 'q'
+    elsif answer.downcase == 'q'
       puts "\e[H\e[2J"
       abort("See you next time!")
     else
@@ -40,25 +40,26 @@ class Game
     puts "Place your X!"
     col = gets.chomp
     if col.downcase == 'a' && @grid[0][5].empty?
-      @board.places("X", 0)
+      col = 0
     elsif col.downcase == 'b'&& @grid[1][5].empty?
-      @board.places("X", 1)
+      col = 1
     elsif col.downcase == 'c' && @grid[2][5].empty?
-      @board.places("X", 2)
+      col = 2
     elsif col.downcase == 'd' && @grid[3][5].empty?
-      @board.places("X", 3)
+      col = 3
     elsif col.downcase == 'e' && @grid[4][5].empty?
-      @board.places("X", 4)
+      col = 4
     elsif col.downcase == 'f' && @grid[5][5].empty?
-      @board.places("X", 5) 
+      col = 5
     elsif col.downcase == 'g' && @grid[6][5].empty?
-      @board.places("X", 6)
+      col = 6
     else 
       puts "\e[H\e[2J"
       puts "Invalid input, try again."
       @board.render
       prompt
     end
+    @board.places('X', col)
   end
 
   def over
