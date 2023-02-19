@@ -10,6 +10,7 @@ class Game
     @board = Board.new(self)
     @grid = @board.grid
     @result = ''
+    @p_or_q = 'q'
   end
 
   def start
@@ -22,16 +23,14 @@ class Game
   def playorquit
     puts "\e[H\e[2J"
     puts "Enter p to play, or q to quit!"
-    p_or_q = nil
-    p_or_q = gets.chomp
-    if p_or_q.downcase == 'p'
+    answer = gets.chomp
+    if answer == 'p'
       puts "\e[H\e[2J"
       puts "Let the games begin!"
       play
-    elsif p_or_q.downcase == 'q'
+    elsif answer == 'q'
       puts "\e[H\e[2J"
-      puts "See you next time!"
-      #quit
+      abort("See you next time!")
     else
       playorquit
     end
@@ -62,14 +61,9 @@ class Game
     end
   end
 
-  # def over?
-  #   false
-  # end
-
   def over
     @under = false
-    puts "\e[H\e[2J"
-    @board.render("Oh snap! Good game!")
+    @board.render("\nOh snap! Good game!")
     sleep(3)
     @board.clear
     playorquit
@@ -77,25 +71,21 @@ class Game
   
   def play
     @under = true
-    puts "\e[H\e[2J"
-    (0..42).each do
+    until @under == false
       @board.render
-      @game.prompt
-      puts "\e[H\e[2J"
-      @board.render
-      puts "The computer will now play a most cunning move."
+      @game.prompt #@board.places(player)
+      @board.render("\nThe computer will now play a most cunning move.")
       sleep(2)
-      puts "\e[H\e[2J"
       @board.places("O")
     end
-    if result == 'X'
-      puts "You Win!"
-    elsif result == 'O'
-      puts "You lose!"
-    elsif result == 'draw' 
-      puts "Tie game!"
-    else
-     puts "error: invalid end of game"
-    end
+    # if result == 'X'
+    #   puts "You Win!"
+    # elsif result == 'O'
+    #   puts "You lose!"
+    # elsif result == 'draw' 
+    #   puts "Tie game!"
+    # else
+    #  puts "error: invalid end of game"
+    # end
   end
 end
