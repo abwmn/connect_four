@@ -1,4 +1,4 @@
-require './spec/spec_helper.rb'
+require './spec/spec_helper'
 
 RSpec.describe do
   before(:each) do
@@ -27,7 +27,6 @@ RSpec.describe do
   end
 
   it 'can count' do
-    # require 'pry'; binding.pry
     expect(@node.count('se')).to eq(3)
     expect(@node.count('se', 'x')).to eq(0)
     @node.se.letter='X'
@@ -41,5 +40,24 @@ RSpec.describe do
     expect(@node.connect?).to eq(false)
     expect(@node.connect?(4, '.')).to eq(true)
     expect(@node.connect?(4, 'O')).to eq(false)
+  end
+
+  it 'can render' do
+    node = @node
+    last_node = node
+    compass = ['ne', 'sw', 'se', 'nw', 'e', 'w', 's', 'n']
+    direction = compass[rand(0..7)]
+    (0..99).each do |step|
+      until node.send(direction)
+        direction = compass[rand(0..7)]
+      end
+      last_node.letter = '.'
+      node.letter = 'O'
+      node.send(direction).letter = 'X'
+      node.send(direction)&.send(direction)&.letter = direction
+      last_node = node
+      node = node.send(direction)
+      @board.render
+    end
   end
 end
