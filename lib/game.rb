@@ -44,27 +44,16 @@ class Game
   end
 
   def prompt
-    puts "Place your X!"
-    letter = gets.chomp
-
-    if letter.downcase    == 'a' && @grid[0][5].empty?
-       return 0
-    elsif letter.downcase == 'b' && @grid[1][5].empty?
-       return 1
-    elsif letter.downcase == 'c' && @grid[2][5].empty?
-       return 2
-    elsif letter.downcase == 'd' && @grid[3][5].empty?
-       return 3
-    elsif letter.downcase == 'e' && @grid[4][5].empty?
-       return 4
-    elsif letter.downcase == 'f' && @grid[5][5].empty?
-       return 5
-    elsif letter.downcase == 'g' && @grid[6][5].empty?
-       return 6
-    else
-      puts "\e[H\e[2J"
-      @board.render("\nInvalid input, try again.")
-      prompt
+    column_indexes = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6 }
+    loop do
+      print "Place your X!\n"
+      letter = gets.chomp.downcase
+      if column_indexes.key?(letter) && @grid[column_indexes[letter]][5].empty?
+        return column_indexes[letter]
+      else
+        puts "\e[H\e[2J"
+        @board.render("\nInvalid input. ")
+      end
     end
   end
 
@@ -72,17 +61,16 @@ class Game
     @under = false
     @result = winner
     @board.render("\nOh snap! Good game!")
+    if winner == 'X'
+      puts "You Win!"
+    elsif winner == 'O'
+      puts "You lose!"
+    elsif @result == 'draw' 
+      puts "Tie game!"
+    else
+      puts "error: invalid end of game"
+    end
     sleep(3)
     playorquit
   end
 end
-
-# if result == 'X'
-#   puts "You Win!"
-# elsif result == 'O'
-#   puts "You lose!"
-# elsif result == 'draw' 
-#   puts "Tie game!"
-# else
-#  puts "error: invalid end of game"
-# end
