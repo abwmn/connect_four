@@ -4,15 +4,26 @@ class Node
 
   def initialize(col, row, board)
     @letter = '.'
+    @col = col
+    @row = row
     @grid = board.grid
-    @ne ||= @grid[col+1][row+1] if @grid[col+1]
-    @e  ||= @grid[col+1][row] if @grid[col+1]
-    @se ||= @grid[col+1][row-1] if @grid[col+1]
-    @s  ||= @grid[col][row-1] if @grid[col]
-    @sw ||= @grid[col-1][row-1] if @grid[col-1]
-    @w  ||= @grid[col-1][row] if @grid[col-1]
-    @nw ||= @grid[col-1][row+1] if @grid[col-1]
-    @compass = {ne: sw, e: w, se: nw, s: nil}
+    @ne = @grid[@col+1] ? @grid[@col+1][@row+1] : nil
+    # @e  = @grid[@col+1] ? @grid[@col+1][@row] : nil
+    # @se = @grid[@col+1] ? @grid[@col+1][@row-1] : nil
+    # @s  = @grid[@col] ?   @grid[@col][@row-1] : nil
+    # @sw = @grid[@col-1] ? @grid[@col-1][@row-1] : nil
+    # @w  = @grid[@col-1] ? @grid[@col-1][@row] : nil
+    # @nw = @grid[@col-1] ? @grid[@col-1][@row+1] : nil
+  end
+
+  def link_up
+    @ne = @grid[@col+1] ? @grid[@col+1][@row+1] : nil
+    # @e  = @grid[@col+1] ? @grid[@col+1][@row] : nil
+    # @se = @grid[@col+1] ? @grid[@col+1][@row-1] : nil
+    # @s  = @grid[@col] ?   @grid[@col][@row-1] : nil
+    # @sw = @grid[@col-1] ? @grid[@col-1][@row-1] : nil
+    # @w  = @grid[@col-1] ? @grid[@col-1][@row] : nil
+    # @nw = @grid[@col-1] ? @grid[@col-1][@row+1] : nil
   end
 
   def empty?
@@ -20,12 +31,14 @@ class Node
   end
 
   def count(direction, letter, count = 0)
+    link_up
     node = self
     return count unless node&.direction&.letter == letter
     node.direction.count(direction, letter, count + 1) 
   end
 
   def connect(letter = @letter)
+    link_up
     connex = 0
     @compass.each do |forth, back|
       to = count(forth, letter)
