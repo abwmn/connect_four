@@ -33,6 +33,14 @@ class Game
     end
   end
 
+  def fresh_start
+    @board.clear
+    @under = true
+    @foe_turn = 0
+    @player_turn = 0
+    @result = ''
+  end
+
   def play
     fresh_start
     until !@under
@@ -44,14 +52,6 @@ class Game
       @board.place("O", pick)
       @foe_turn += 1
     end
-  end
-
-  def fresh_start
-    @board.clear
-    @under = true
-    @foe_turn = 0
-    @player_turn = 0
-    @result = ''
   end
 
   def prompt
@@ -69,7 +69,7 @@ class Game
   end
 
   def pick
-    results = {}
+    movescores = {}
     return rand(0..6) if @foe_turn < 2
     (0..6).each do |col|
       node = @grid[col].find { |node| node.empty?}
@@ -78,20 +78,23 @@ class Game
       elsif node && node.connect?(4, 'X')
         return col
       elsif node && node.connect?(3, 'O')
-        if (!node.n && (node.s.s.letter == node.s.letter)) || 
-          (!node.w && (node.e.e.letter == node.e.letter)) || 
-          (!node.e && (node.w.w.letter == node.w.letter))
-          results[col] = 1
+        if (!node.n && node.s.letter == 'O' && 
+             node.s.s.letter == 'O') || 
+           (!node.w && node.e.letter == 'O' && 
+             node.e.e.letter == 'O') || 
+           (!node.e && node.w.letter == 'O' && 
+             node.w.w.letter == 'O')
+          movescores[col] = 1
         else
-          results[col] = 3
+          movescores[col] = 3
         end
       elsif node 
-        results[col] = node.connect('O')
+        movescores[col] = node.connect('O')
       else
-        results[col] = 0
+        movescores[col] = 0
       end
     end
-    results.key(results.values.max) 
+    movescores.key(movescores.values.max) 
   end
   
   def over(winner)
