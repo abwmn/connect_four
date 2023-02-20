@@ -116,30 +116,81 @@ class Game
 
 
   def pick
-    if 
     movescores = {}
+    if @difficulty = 'e'
+      until @grid[col].find {|node| node.empty?}
+        col = rand(0..6)
+      end
+      node = @grid[col].find {|node| node.empty?}
+       node.letter = letter
+       if node.connect?(4) || full?
+        @game.over
+      end
+      col
+    elsif @difficulty = 'm'
+    elsif @difficulty = 'h'
+      return rand(0..6) if @foe_moves < 2
+      (0..6).each do |col|
+        node = @grid[col].find { |node| node.empty?}
+        if       node && node.connect?(4, 'O')
+          return col
+      elsif    node && node.connect?(4, 'X')
+        return col
+        elsif node 
+          movescores[col] = node.connect('O')
+        else
+          movescores[col] = 0
+        end
+      end
+    end
+    elsif @difficulty = 'h'
+      return rand(0..6) if @foe_moves < 2
+      (0..6).each do |col|
+        node = @grid[col].find { |node| node.empty?}
+        if       node && node.connect?(4, 'O')
+          return col
+      elsif    node && node.connect?(4, 'X')
+        return col
+      elsif    node && node.connect?(3, 'O')
+        if    !node.n && node.count('s', 'O') == 2 ||
+              !node.w && node.count('e', 'O') == 2 ||
+               !node.e && node.count('w', 'O') == 2 ||
+               !node.s && node.count('n', 'O') == 2
+               movescores[col] = 1
+         else
+            movescores[col] = 3
+         end
+        elsif node 
+          movescores[col] = node.connect('O')
+        else
+          movescores[col] = 0
+        end
+      end
+    end
+  elsif @difficulty = 'i'
     return rand(0..6) if @foe_moves < 2
     (0..6).each do |col|
       node = @grid[col].find { |node| node.empty?}
       if       node && node.connect?(4, 'O')
         return col
-      elsif    node && node.connect?(4, 'X')
-        return col
-      elsif    node && node.connect?(3, 'O')
-        if   !node.n && node.count('s', 'O') == 2 ||
-             !node.w && node.count('e', 'O') == 2 ||
+    elsif    node && node.connect?(4, 'X')
+      return col
+    elsif    node && node.connect?(3, 'O')
+      if    !node.n && node.count('s', 'O') == 2 ||
+            !node.w && node.count('e', 'O') == 2 ||
              !node.e && node.count('w', 'O') == 2 ||
              !node.s && node.count('n', 'O') == 2
              movescores[col] = 1
-        else
+       else
           movescores[col] = 3
-        end
+       end
       elsif node 
         movescores[col] = node.connect('O')
       else
         movescores[col] = 0
       end
     end
+  end
     movescores.key(movescores.values.max) 
   end
   
