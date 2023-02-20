@@ -17,18 +17,16 @@ class Node
     @letter == '.'
   end
 
-  def count(direction, letter = @letter, count = 0)
-    node = self
-    return count unless node&.send(direction)&.letter == letter
-    node.send(direction).count(direction, letter, count + 1)
+  def count(heading, letter = @letter, count = 0)
+    return count unless self&.send(heading)&.letter == letter
+    self.send(heading).count(heading, letter, count + 1)
   end
 
-  def connect(letter = @letter)
+  def connect(letter = @letter, connex = 0)
     compass = {'ne'=>'sw', 'se'=>'nw', 'e'=>'w', 's'=>'n'}
-    connex = 0
-    compass.each do |forth, back|
-      to = count(forth, letter)
-      fro = count(back, letter)
+    compass.each do |fore, aft|
+      to = count(fore, letter)
+      fro = count(aft, letter)
       total = to + fro + 1
       connex = [total, connex].max
     end

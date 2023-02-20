@@ -1,5 +1,3 @@
-require_relative 'node'
-
 class Board
   attr_reader :grid
   
@@ -11,7 +9,10 @@ class Board
         @grid[col][row] = Node.new
       end
     end
+    link_up
+  end
 
+  def link_up
     (0..6).each do |col|
       (0..5).each do |row|
         node = @grid[col][row]
@@ -23,6 +24,9 @@ class Board
         if row > 0
           node.s  = @grid[col][row-1]
         end
+        if row < 4
+          node.n = @grid[col][row+1]
+        end
         if col > 0
           node.w  = @grid[col-1][row]
           node.sw = @grid[col-1][row-1] unless row < 1
@@ -32,54 +36,45 @@ class Board
     end
   end
 
-  def places(letter, col = rand(0..6))
-    until @grid[col].find {|node| node.empty?}
-      col = rand(0..6)
+  def render(message='')
+    puts "\e[H\e[2J"
+    puts 'A B C D E F G'
+    next_row = []
+    (0..5).reverse_each do |row|
+      (0..6).each do |col|
+        next_row << @grid[col][row].letter
+     end
+        puts next_row.join(" ")
+        next_row.clear
     end
-    node = @grid[col].find {|node| node.empty?}
-    node.letter = letter
-    if node.connect?(4) || full?
-      @game.over
-    end
-    col
+    puts "\nMoves: #{@game.player_moves + @game.foe_moves}"
+    puts message
   end
 
   def place(letter, col)
     node = @grid[col].find {|node| node.empty?}
     node.letter = letter
-    if node.connect?(4) || full?
-      @game.over
+    if node.connect?(4) 
+      @game.over(letter)
+    elsif full?
+      @game.over('draw')
     end
-  end
-
-  def render(message='')
-    puts "\e[H\e[2J"
-    puts 'A B C D E F G'
-    holder = []
-    (0..5).reverse_each do |row|
-      (0..6).each do |col|
-        holder << @grid[col][row].letter
-     end
-        puts holder.join(" ")
-        holder.clear
-    end
-    puts message
+    col
   end
 
   def full?
-    (0..6).each do |col|
-      (0..5).each do |row|
-        return false if @grid[col][row].letter == '.'
-      end
-    end
-    true
+    !@grid.flatten.any?{ |node| node.letter == '.' }
   end
 
   def clear
-    (0..6).each do |col|
-      (0..5).each do |row|
-        @grid[col][row].letter = '.'
-      end
-    end
+    @grid.flatten.each { |node| node.letter =  '.' }
   end
 end
+
+# def place(letter, col)
+#   node = @grid[col].find {|node| node.empty?}
+#   node.letter = letter
+#   if node.connect?(4) || full?
+#     @game.over
+#   end
+# end
