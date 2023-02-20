@@ -5,7 +5,8 @@ class Game
               :under, 
               :result,
               :foe_moves, 
-              :player_moves
+              :player_moves,
+              :difficulty
 
   def initialize
     @board = Board.new(self)
@@ -14,6 +15,7 @@ class Game
     @result = ''
     @foe_moves = 0
     @player_moves = 0
+    @difficulty = ''
   end
 
   def start
@@ -37,8 +39,12 @@ class Game
 
     elsif answer =='h'
       puts "\e[H\e[2J"
-      puts "You chose...HARD?!"
+      puts "You chose HARD!!"
+    elsif answer == 'i'
+      puts "\e[H\e[2J"
+      puts "Who told you about the Insane difficulty?!"
     end
+    @difficulty = answer
     sleep(1.5)
     puts "Good luck, have fun!"
     sleep(1)
@@ -110,6 +116,7 @@ class Game
 
 
   def pick
+    if 
     movescores = {}
     return rand(0..6) if @foe_moves < 2
     (0..6).each do |col|
