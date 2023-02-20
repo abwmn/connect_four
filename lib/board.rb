@@ -44,13 +44,11 @@ class Board
         puts next_row.join(" ")
         next_row.clear
     end
+    puts "\nMoves: #{@game.player_turn + @game.foe_turn}"
     puts message
   end
 
-  def place(letter, col = rand(0..6))
-    until @grid[col].find {|node| node.empty?}
-      col = rand(0..6)
-    end
+  def place(letter, col)
     node = @grid[col].find {|node| node.empty?}
     node.letter = letter
     if node.connect?(4) 
