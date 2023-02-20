@@ -32,7 +32,7 @@ RSpec.describe Board do
   it 'knows when full' do
     (0..6).each do |col|
       (0..5).each do |row|
-        @grid[col][row].letter = '.'
+        @grid[col][row].letter = 'X'
       end
     end
     expect(@board.full?).to eq(true)
