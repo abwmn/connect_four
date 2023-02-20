@@ -1,11 +1,13 @@
 class Game
-  attr_reader :board, :grid, :under, :result
+  attr_reader :board, :grid, :under, :result, :player_turn, :foe_turn
 
   def initialize
     @board = Board.new(self)
     @grid = @board.grid
     @under = false
     @result = ''
+    @foe_moves = 0
+    @player_moves = 0
   end
 
   def start
@@ -33,13 +35,17 @@ class Game
 
   def play
     @board.clear
+    @foe_turn = 0
+    @player_turn = 0
     @under = true
     until !@under
       @board.render
       @board.place("X", prompt)
-      @board.render("\nThe computer will now play a most cunning move.")
+      @player_turn += 1
+      @board.render("\nThe foe will make a cunning move.")
       sleep(2)
-      @board.place("O")
+      @board.place("O", pick)
+      @foe_turn += 1
     end
   end
 
@@ -57,6 +63,27 @@ class Game
     end
   end
 
+  def pick
+    results = {}
+    if @foe_turn < 2
+      return rand(0..6)
+    else
+      (0..6).each do |col|
+        node = @grid[col].find { |node| node.empty?}
+        if node && node.connect?(4, 'O')
+          return col
+        elsif node && node.connect?(4, 'X')
+          results[col] = 4
+        elsif node
+          results[col] = node.connect('O')
+        else
+          results[col] = 0
+        end
+      end
+    end
+    results.key(results.values.max) 
+  end
+  
   def over(winner)
     @under = false
     @result = winner
