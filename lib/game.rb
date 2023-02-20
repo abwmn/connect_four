@@ -11,7 +11,7 @@ class Game
   def start
     puts "\e[H\e[2J"
     puts "Welcome to Connect 4!"
-    # sleep(2)
+    sleep(2)
     playorquit
   end
 
@@ -38,7 +38,7 @@ class Game
       @board.render
       @board.place("X", prompt)
       @board.render("\nThe computer will now play a most cunning move.")
-      # sleep(2)
+      sleep(2)
       @board.place("O")
     end
   end
@@ -69,7 +69,7 @@ class Game
       sleep(5)
     end
     @board.render("\nOh snap! #{message}\n\nGood game!")
-    # sleep(3)
+    sleep(3)
     playorquit
   end
 end
