@@ -74,30 +74,54 @@ class Game
   end
 
   def pick
-    movescores = {}
-    return rand(0..6) if @foe_moves < 2
+    move_scores = {}
+    return rand(0..6) if @foe_moves < 1
     (0..6).each do |col|
       node = @grid[col].find { |node| node.empty?}
+      heading_scores = {}
       if       node && node.connect?(4, 'O')
         return col
       elsif    node && node.connect?(4, 'X')
         return col
       elsif    node && node.connect?(3, 'O')
-        if   !node.n && node.count('s', 'O') == 2 ||
-             !node.w && node.count('e', 'O') == 2 ||
-             !node.e && node.count('w', 'O') == 2 ||
-             !node.s && node.count('n', 'O') == 2
-             movescores[col] = 1
-        else
-          movescores[col] = 3
+        node.compass.each do |to, fro|
+          if ((!node.send(to)  || node.send(to).letter  == 'X') &&
+                node.count(fro,'O') == 2)
+                heading_scores[to] = 0
+          else
+                heading_scores[to] = (node.count(to, 'O') + node.count(fro, 'O') + 1)
+          end
+          if ((!node.send(fro) || node.send(fro).letter == 'X') &&
+                node.count(to, 'O') == 2)
+                heading_scores[fro] = 0
+          else
+                heading_scores[fro] = (node.count(to, 'O') + node.count(fro, 'O') + 1)
+          end
         end
+        move_scores[col] = heading_scores.values.max
+      elsif    node && node.connect?(2, 'O')
+        node.compass.each do |to, fro|
+          if ((!node.send(to)  || node.send(to).letter  == 'X') &&
+                node.count(fro,'O') == 1)
+                heading_scores[to] = 0
+          else
+                heading_scores[to] = (node.count(to, 'O') + node.count(fro, 'O') + 1)
+          end
+          if ((!node.send(fro) || node.send(fro).letter == 'X') &&
+                node.count(to, 'O') == 1)
+                heading_scores[fro] = 0
+          else
+                heading_scores[fro] = (node.count(to, 'O') + node.count(fro, 'O') + 1)
+          end
+        end
+        move_scores[col] = heading_scores.values.max
       elsif node 
-        movescores[col] = node.connect('O')
+        move_scores[col] = 1
       else
-        movescores[col] = 0
+        move_scores[col] = 0
       end
     end
-    movescores.key(movescores.values.max) 
+    move_scores.key(move_scores.values.max) 
   end
   
   def over(winner)
