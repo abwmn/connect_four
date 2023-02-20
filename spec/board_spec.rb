@@ -35,7 +35,6 @@ RSpec.describe Board do
         @grid[col][row].letter = '.'
       end
     end
-    # require 'pry'; binding.pry
     expect(@board.full?).to eq(true)
   end
 end
