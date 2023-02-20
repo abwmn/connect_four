@@ -43,12 +43,12 @@ class Game
   def playorquit
     puts "\e[H\e[2J"
     puts "Enter p to play, or q to quit!"
-    answer = gets.chomp
-    if answer.downcase == 'p'
+    answer = gets.chr.downcase
+    if answer == 'p'
       puts "\e[H\e[2J"
       puts "Let the games begin!"
       play
-    elsif answer.downcase == 'q'
+    elsif answer == 'q'
       puts "\e[H\e[2J"
       abort("See you next time!")
     else
