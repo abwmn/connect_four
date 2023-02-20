@@ -47,7 +47,7 @@ class Board
         puts next_row.join(" ")
         next_row.clear
     end
-    puts "\nMoves: #{@game.player_turn + @game.foe_turn}"
+    puts "\nMoves: #{@game.player_moves + @game.foe_moves}"
     puts message
   end
 
