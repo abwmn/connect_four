@@ -1,5 +1,10 @@
 class Game
-  attr_reader :board, :grid, :under, :result, :player_turn, :foe_turn
+  attr_reader :board, 
+              :grid, 
+              :under, 
+              :result,
+              :foe_moves, 
+              :player_moves
 
   def initialize
     @board = Board.new(self)
@@ -36,8 +41,8 @@ class Game
   def fresh_start
     @board.clear
     @under = true
-    @foe_turn = 0
-    @player_turn = 0
+    @foe_moves = 0
+    @player_moves = 0
     @result = ''
   end
 
@@ -46,11 +51,11 @@ class Game
     until !@under
       @board.render
       @board.place("X", prompt)
-      @player_turn += 1
+      @player_moves += 1
       @board.render("\nThe foe plots a cunning move.")
       sleep(2)
       @board.place("O", pick)
-      @foe_turn += 1
+      @foe_moves += 1
     end
   end
 
@@ -70,7 +75,7 @@ class Game
 
   def pick
     movescores = {}
-    return rand(0..6) if @foe_turn < 2
+    return rand(0..6) if @foe_moves < 2
     (0..6).each do |col|
       node = @grid[col].find { |node| node.empty?}
       if node && node.connect?(4, 'O')
