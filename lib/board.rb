@@ -24,6 +24,9 @@ class Board
         if row > 0
           node.s  = @grid[col][row-1]
         end
+        if row < 4
+          node.n = @grid[col][row+1]
+        end
         if col > 0
           node.w  = @grid[col-1][row]
           node.sw = @grid[col-1][row-1] unless row < 1
