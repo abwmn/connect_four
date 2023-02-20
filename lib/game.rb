@@ -1,3 +1,4 @@
+require_relative 'board'
 class Game
   attr_reader :board, 
               :grid, 
@@ -19,25 +20,28 @@ class Game
     puts "\e[H\e[2J"
     puts "Welcome to Connect 4!"
     sleep(2)
-    select_difficulty
+    selectdifficulty
     playorquit
   end
 
-  def select_difficulty
+  def selectdifficulty
     puts "\e[H\e[2J"
-    answer = gets.chr.downcase
     puts "Please select difficulty!\nEasy, Medium, or HARD\n(e, m, h)"
-    if answer = 'e'
+    answer = gets.chr.downcase
+    if answer == 'e'
       puts "\e[H\e[2J"
       puts "You chose Easy!!"
-    elsif answer = 'm' 
+    elsif answer == 'm' 
       puts "\e[H\e[2J"
       puts "You chose Medium!"
 
-    elsif answer = 'h'
+    elsif answer =='h'
       puts "\e[H\e[2J"
       puts "You chose...HARD?!"
     end
+    sleep(1.5)
+    puts "Good luck, have fun!"
+    sleep(1)
   end
 
   def playorquit
@@ -90,6 +94,20 @@ class Game
       end
     end
   end
+
+  def easy_pick
+    
+   until @grid[col].find {|node| node.empty?}
+      col = rand(0..6)
+    end
+    node = @grid[col].find {|node| node.empty?}
+     node.letter = letter
+     if node.connect?(4) || full?
+      @game.over
+    end
+    col
+  end
+
 
   def pick
     movescores = {}
