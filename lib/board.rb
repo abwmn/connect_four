@@ -9,7 +9,10 @@ class Board
         @grid[col][row] = Node.new
       end
     end
+    link_up
+  end
 
+  def link_up
     (0..6).each do |col|
       (0..5).each do |row|
         node = @grid[col][row]
@@ -33,13 +36,13 @@ class Board
   def render(message='')
     puts "\e[H\e[2J"
     puts 'A B C D E F G'
-    holder = []
+    next_row = []
     (0..5).reverse_each do |row|
       (0..6).each do |col|
-        holder << @grid[col][row].letter
+        next_row << @grid[col][row].letter
      end
-        puts holder.join(" ")
-        holder.clear
+        puts next_row.join(" ")
+        next_row.clear
     end
     puts message
   end
@@ -59,19 +62,15 @@ class Board
   end
 
   def full?
-    (0..6).each do |col|
-      (0..5).each do |row|
-        return false if @grid[col][row].letter == '.'
-      end
+    @grid.flatten.each do |node|
+      return false if node.letter == '.'
     end
     true
   end
 
   def clear
-    (0..6).each do |col|
-      (0..5).each do |row|
-        @grid[col][row].letter = '.'
-      end
+    @grid.flatten.each do |node|
+      node.letter = '.'
     end
   end
 end
