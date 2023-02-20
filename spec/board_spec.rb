@@ -4,29 +4,38 @@ RSpec.describe Board do
   before(:each) do
     @game = Game.new
     @board = @game.board
+    @grid = @board.grid
   end
 
   it 'exists' do
     expect(@board).to be_a(Board)
   end
 
-  it 'has a grid hash' do  
-    expect(@board.grid).to be_an(Array)
+  it 'is a grid array' do  
+    expect(@grid).to be_an(Array)
   end
 
   it 'is full of nodes' do
-    expect(@board.grid[0][0]).to be_a(Node)
+    expect(@grid[0][0]).to be_a(Node)
   end
 
   it 'places' do
-    @board.places("X", 2)
+    @board.place("X", 2)
 
-    expect(@board.grid[2][0].letter).to eq("X")
+    expect(@grid[2][0].letter).to eq("X")
   end
 
   it 'places random' do
-    expect(@board.grid[@board.places("X")].find {|node|!node.empty?}.letter).to eq("X")
-    @game.start
+    expect(@grid[@board.place("X")].find {|node|!node.empty?}.letter).to eq("X")
   end
 
+  it 'knows when full' do
+    (0..6).each do |col|
+      (0..5).each do |row|
+        @grid[col][row].letter = '.'
+      end
+    end
+    # require 'pry'; binding.pry
+    expect(@board.full?).to eq(true)
+  end
 end
