@@ -34,28 +34,33 @@ class Game
   end
 
   def play
-    @board.clear
-    @foe_turn = 0
-    @player_turn = 0
-    @under = true
+    fresh_start
     until !@under
       @board.render
       @board.place("X", prompt)
       @player_turn += 1
-      @board.render("\nThe foe will make a cunning move.")
+      @board.render("\nThe foe plots a cunning move.")
       sleep(2)
       @board.place("O", pick)
       @foe_turn += 1
     end
   end
 
+  def fresh_start
+    @board.clear
+    @under = true
+    @foe_turn = 0
+    @player_turn = 0
+    @result = ''
+  end
+
   def prompt
     columns = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6 }
     loop do
       print "Place your X!\n"
-      letter = gets.chomp.downcase
-      if columns.key?(letter) && @grid[columns[letter]][5].empty?
-        return columns[letter]
+      pick = gets.chomp.downcase
+      if columns.key?(pick) && @grid[columns[pick]][5].empty?
+        return columns[pick]
       else
         puts "\e[H\e[2J"
         @board.render("\nInvalid input. ")
@@ -65,20 +70,25 @@ class Game
 
   def pick
     results = {}
-    if @foe_turn < 2
-      return rand(0..6)
-    else
-      (0..6).each do |col|
-        node = @grid[col].find { |node| node.empty?}
-        if node && node.connect?(4, 'O')
-          return col
-        elsif node && node.connect?(4, 'X')
-          results[col] = 4
-        elsif node
-          results[col] = node.connect('O')
+    return rand(0..6) if @foe_turn < 2
+    (0..6).each do |col|
+      node = @grid[col].find { |node| node.empty?}
+      if node && node.connect?(4, 'O')
+        return col
+      elsif node && node.connect?(4, 'X')
+        return col
+      elsif node && node.connect?(3, 'O')
+        if (!node.n && (node.s.s.letter == node.s.letter)) || 
+          (!node.w && (node.e.e.letter == node.e.letter)) || 
+          (!node.e && (node.w.w.letter == node.w.letter))
+          results[col] = 1
         else
-          results[col] = 0
+          results[col] = 3
         end
+      elsif node 
+        results[col] = node.connect('O')
+      else
+        results[col] = 0
       end
     end
     results.key(results.values.max) 
