@@ -66,7 +66,6 @@ class Game
       "You lose!"
     elsif @result == 'draw'
       "Tie game!"
-      sleep(5)
     end
     @board.render("\nOh snap! #{message}\n\nGood game!")
     sleep(3)
