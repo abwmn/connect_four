@@ -78,18 +78,16 @@ class Game
     return rand(0..6) if @foe_moves < 2
     (0..6).each do |col|
       node = @grid[col].find { |node| node.empty?}
-      if node && node.connect?(4, 'O')
+      if       node && node.connect?(4, 'O')
         return col
-      elsif node && node.connect?(4, 'X')
+      elsif    node && node.connect?(4, 'X')
         return col
-      elsif node && node.connect?(3, 'O')
-        if (!node.n && node.s.letter == 'O' && 
-             node.s.s.letter == 'O') || 
-           (!node.w && node.e.letter == 'O' && 
-             node.e.e.letter == 'O') || 
-           (!node.e && node.w.letter == 'O' && 
-             node.w.w.letter == 'O')
-          movescores[col] = 1
+      elsif    node && node.connect?(3, 'O')
+        if   !node.n && node.count('s', 'O') == 2 ||
+             !node.w && node.count('e', 'O') == 2 ||
+             !node.e && node.count('w', 'O') == 2 ||
+             !node.s && node.count('n', 'O') == 2
+             movescores[col] = 1
         else
           movescores[col] = 3
         end
@@ -113,7 +111,7 @@ class Game
       "Tie game!"
     end
     @board.render("\nOh snap! #{message}\n\nGood game!")
-    sleep(3)
+    sleep(6)
     playorquit
   end
 end
