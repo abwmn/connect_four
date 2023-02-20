@@ -62,7 +62,7 @@ class Game
     @result = winner
     message = if winner == 'X'
       "You win!"
-    elsif wnner == 'O'
+    elsif winner == 'O'
       "You lose!"
     elsif @result == 'draw'
       "Tie game!"
