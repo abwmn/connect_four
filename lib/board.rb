@@ -62,16 +62,11 @@ class Board
   end
 
   def full?
-    @grid.flatten.each do |node|
-      return false if node.letter == '.'
-    end
-    true
+    !@grid.flatten.any?{ |node| node.letter == '.' }
   end
 
   def clear
-    @grid.flatten.each do |node|
-      node.letter = '.'
-    end
+    @grid.flatten.each { |node| node.letter =  '.' }
   end
 end
 
