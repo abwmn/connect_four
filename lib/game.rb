@@ -24,17 +24,25 @@ class Game
     puts "\e[H\e[2J"
     puts "Enter p to play, or q to quit!"
     answer = gets.chomp
-    if answer.downcase == 'p'
-      puts "\e[H\e[2J"
-      puts "Let the games begin!"
-      answer = ''
-      play
-    elsif answer.downcase == 'q'
-      puts "\e[H\e[2J"
-      abort("See you next time!")
-    else
-      playorquit
-    end
+      if answer.downcase == 'p'
+        puts "\e[H\e[2J"
+        puts "Select Difficulty! \n easy, medium, or hard!\n (e, m, h)"
+        if 
+          
+        elsif 
+          
+        else
+          
+        end
+        puts "Let the games begin!"
+        answer = ''
+        play
+      elsif answer.downcase == 'q'
+        puts "\e[H\e[2J"
+        abort("See you next time!")
+      else
+        playorquit
+      end
   end
 
   def play
