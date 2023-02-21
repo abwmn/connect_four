@@ -37,22 +37,31 @@ class Board
     end
   end
 
-  def render(message='')
+  def render(message=nil)
     puts "\e[H\e[2J"
     puts 'A B C D E F G'
     next_row = []
     (0..5).reverse_each do |row|
       (0..6).each do |col|
         next_row << @grid[col][row].letter
-     end
+      end
         puts next_row.join(" ")
         next_row.clear
     end
-    puts "\nMoves: #{@game.player_moves + @game.foe_moves}"
-    puts message
+
+    moves = @game.player_moves + @game.foe_moves
+
+    if @game.under && @game.lastwinner
+      puts "\nMoves: #{moves}; Last winner: #{@game.lastwinner}"
+    elsif @game.under
+      puts "\nMoves: #{moves}"
+    else
+      puts "\nWinner: #{@game.winner}, in #{moves} moves"
+    end
+    puts message if message
   end
 
-  def place(letter, col = rand(0..6))
+  def place(letter, col)
     node = @grid[col].find {|node| node.empty?}
     node.letter = letter
     if node.connect?(4) 
@@ -60,7 +69,6 @@ class Board
     elsif full?
       @game.over('draw')
     end
-    col
   end
 
   def full?
@@ -71,11 +79,3 @@ class Board
     @grid.flatten.each { |node| node.letter =  '.' }
   end
 end
-
-# def place(letter, col)
-#   node = @grid[col].find {|node| node.empty?}
-#   node.letter = letter
-#   if node.connect?(4) || full?
-#     @game.over
-#   end
-# end

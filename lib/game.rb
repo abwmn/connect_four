@@ -3,7 +3,8 @@ class Game
   attr_reader :board, 
               :grid, 
               :under, 
-              :result,
+              :winner,
+              :lastwinner,
               :foe_moves, 
               :player_moves,
               :difficulty
@@ -11,8 +12,10 @@ class Game
   def initialize
     @board = Board.new(self)
     @grid = @board.grid
-    @under = false
-    @result = ''
+    @under = true
+    @winner = false
+    @lastwinner = false
+    @message = ''
     @foe_moves = 0
     @player_moves = 0
     @difficulty = ''
@@ -22,8 +25,8 @@ class Game
     puts "\e[H\e[2J"
     puts "Welcome to Connect 4!"
     sleep(2)
-    selectdifficulty
     playorquit
+    selectdifficulty
   end
 
   def selectdifficulty
@@ -32,83 +35,93 @@ class Game
     answer = gets.chr.downcase
     if answer == 'e'
       puts "\e[H\e[2J"
-      puts "You chose Easy!!"
+      puts "You chose Easy!"
     elsif answer == 'm' 
       puts "\e[H\e[2J"
       puts "You chose Medium!"
-
     elsif answer =='h'
       puts "\e[H\e[2J"
       puts "You chose HARD!!"
     elsif answer == 'i'
       puts "\e[H\e[2J"
       puts "Who told you about the Insane difficulty?!"
+    else
+      selectdifficulty
     end
     @difficulty = answer
     sleep(1.5)
-    puts "Good luck, have fun!"
+    puts "\e[H\e[2J" 
+    puts "Good luck, have fun! Let the games begin!"
     sleep(1)
+    play
   end
-
-  def playorquit
-    puts "\e[H\e[2J"
-    puts "Enter p to play, or q to quit!"
-    answer = gets.chr.downcase
-    if answer == 'p'
-      puts "\e[H\e[2J"
-      puts "Let the games begin!"
-      play
-    elsif answer == 'q'
-      puts "\e[H\e[2J"
-      abort("See you next time!")
-    else
-      playorquit
+    
+   def playorquit
+    loop do
+      puts "\nEnter p to play, or q to quit!\n"
+      answer = gets.chr.downcase
+      if answer.downcase == 'p'
+        selectdifficulty
+      elsif answer.downcase == 'q'
+        puts "\e[H\e[2J" 
+        abort("See you next time!")
+      elsif !@under
+        puts "\e[H\e[2J"
+        @board.render("\nOh snap! #{@message} Good game!\n")
+      else
+        start
+      end
     end
-  end
-
-  def fresh_start
-    @board.clear
-    @under = true
-    @foe_moves = 0
-    @player_moves = 0
-    @result = ''
   end
 
   def play
-    fresh_start
+    reset
     until !@under
-      @board.render
-      @board.place("X", prompt)
-      @player_moves += 1
-      @board.render("\nThe foe plots a cunning move.")
-      sleep(2)
-      @board.place("O", pick)
-      @foe_moves += 1
+      take_turns
     end
   end
 
+  def reset
+    @under = true
+    @lastwinner = @winner
+    @winner = false
+    @board.clear
+    @foe_moves = 0
+    @player_moves = 0
+  end
+
+  def take_turns
+    @board.render
+    @board.place("X", prompt)
+    @player_moves += 1
+    @board.render("\nThe foe plots a cunning move.")
+    sleep(1.5)
+    @board.place("O", pick)
+    @foe_moves += 1
+  end
+
   def prompt
-    columns = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6 }
+    columns = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6 }.freeze
     loop do
-      print "Place your X!\n"
+      print "\nPlace your X from A to G!\n"
       pick = gets.chomp.downcase
       if columns.key?(pick) && @grid[columns[pick]][5].empty?
         return columns[pick]
       else
         puts "\e[H\e[2J"
-        @board.render("\nInvalid input. ")
+        @board.render
       end
     end
   end
 
   def easy_pick
     col = nil
-    loop do
-      col = rand(0..6)
-      node = @grid[col].find {|node| node.empty? }
-      break if node
-    end
-    col
+  loop do
+    col = rand(0..6)
+    node = @grid[col].find {|node| node.empty? }
+    break if node
+  end
+  col
   end
 
   def medium_pick
@@ -137,29 +150,21 @@ class Game
       if       node && node.connect?(4, 'O')
         return col
       elsif    node && node.connect?(4, 'X')
-        return col
+        movescores[col] = 4
       elsif    node && node.connect?(3, 'O')
-        if   !node.n && node.count('s', 'O') == 2 ||
-             !node.w && node.count('e', 'O') == 2 ||
-             !node.e && node.count('w', 'O') == 2 ||
-             !node.s && node.count('n', 'O') == 2
-             movescores[col] = 1
-        else
-          movescores[col] = 3
+        if   !node.n && node.count('s', 'O') == 2
+              movescores[col] = 1
+        else  
+              movescores[col] = 3
         end
-      elsif node 
-        movescores[col] = node.connect('O')
+      elsif node
+              movescores[col] = node.connect('O')
       else
-        movescores[col] = 0
+          movescores[col] = 0
       end
+     end
+     movescores.key(movescores.values.max) 
     end
-    movescores.key(movescores.values.max) 
-  end
-
-  def insane_pick
-    
-  end
-
 
   def pick
     if @difficulty == 'e'
@@ -174,19 +179,19 @@ class Game
       return 'error, invalid difficulty setting'
     end
   end
-  
+
   def over(winner)
     @under = false
-    @result = winner
-    message = if winner == 'X'
+    @winner = winner
+    @message = if winner == 'X'
       "You win!"
     elsif winner == 'O'
-      "You lose!"
-    elsif @result == 'draw'
+      "You lose."
+    elsif winner == 'draw'
       "Tie game!"
     end
-    @board.render("\nOh snap! #{message}\n\nGood game!")
-    sleep(6)
+    @board.render("\nOh snap! #{@message} Good game!")
+    sleep(2)
     playorquit
   end
 end

@@ -1,5 +1,5 @@
 class Node
-  attr_accessor :letter, :n, :ne, :e, :se, :s, :sw, :w, :nw
+  attr_accessor :letter, :n, :ne, :e, :se, :s, :sw, :w, :nw, :compass
   
   def initialize
     @letter = '.'
@@ -11,6 +11,7 @@ class Node
     @sw = nil
     @w = nil
     @nw = nil
+    @compass = {'ne'=>'sw', 'se'=>'nw', 'e'=>'w', 's'=>'n'}
   end
 
   def empty?
@@ -23,8 +24,7 @@ class Node
   end
 
   def connect(letter = @letter, connex = 0)
-    compass = {'ne'=>'sw', 'se'=>'nw', 'e'=>'w', 's'=>'n'}
-    compass.each do |fore, aft|
+    @compass.each do |fore, aft|
       to = count(fore, letter)
       fro = count(aft, letter)
       total = to + fro + 1
