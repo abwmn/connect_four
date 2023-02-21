@@ -4,17 +4,17 @@ class Game
               :under, 
               :result,
               :foe_moves, 
-              :player_moves
-              :difficulty
-              :last_winner
+              :player_moves,
+              :difficulty,
+              :lastwinner
 
   def initialize
     @board = Board.new(self)
     @grid = @board.grid
     @under = true
-    @result = ''
+    @result = false
+    @lastwinner = false
     @message = ''
-    @lastwinner = ''
     @foe_moves = 0
     @player_moves = 0
     @difficulty = 'hard'
