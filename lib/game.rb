@@ -102,31 +102,38 @@ class Game
   end
 
   def easy_pick
+    letter = 'O'
+    col = rand(0..6)
    until @grid[col].find {|node| node.empty?}
       col = rand(0..6)
     end
     node = @grid[col].find {|node| node.empty?}
      node.letter = letter
-     if node.connect?(4) || full?
+     if node.connect?(4) || @board.full?
       @game.over
     end
     col
   end
 
   def medium_pick
-    
+    movescores = {}
+    return rand(0..6) if @foe_moves < 2
+    (0..6).each do |col|
+      node = @grid[col].find { |node| node.empty?}
+      if       node && node.connect?(4, 'O')
+        return col
+      elsif    node && node.connect?(4, 'X')
+        return col
+      elsif node 
+        movescores[col] = node.connect('O')
+      else
+        movescores[col] = 0
+      end
+    end
+    movescores.key(movescores.values.max) 
   end
 
   def hard_pick
-
-  end
-
-  def insane_pick
-    
-  end
-
-
-  def pick
     movescores = {}
     return rand(0..6) if @foe_moves < 2
     (0..6).each do |col|
@@ -151,6 +158,25 @@ class Game
       end
     end
     movescores.key(movescores.values.max) 
+  end
+
+  def insane_pick
+    
+  end
+
+
+  def pick
+    if @difficulty == 'e'
+      easy_pick
+    elsif @difficulty == 'm'
+      medium_pick
+    elsif @difficulty == 'h'
+      hard_pick
+    elsif @difficulty == 'i'
+      insane_pick
+    else 
+      return 'error, invalid difficulty setting'
+    end
   end
   
   def over(winner)
