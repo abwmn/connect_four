@@ -102,8 +102,13 @@ class Game
   end
 
   def easy_pick
-    letter = 'O'
-    @board.place(letter)
+    col = nil
+  loop do
+    col = rand(0..6)
+    node = @grid[col].find {|node| node.empty? }
+    break if node
+  end
+  col
   end
 
   def medium_pick
