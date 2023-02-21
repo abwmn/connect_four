@@ -38,14 +38,6 @@ class Game
     end
   end
 
-  def fresh_start
-    @board.clear
-    @under = true
-    @foe_moves = 0
-    @player_moves = 0
-    @result = ''
-  end
-
   def play
     fresh_start
     until !@under
@@ -57,6 +49,14 @@ class Game
       @board.place("O", pick)
       @foe_moves += 1
     end
+  end
+
+  def fresh_start
+    @board.clear
+    @under = true
+    @foe_moves = 0
+    @player_moves = 0
+    @result = ''
   end
 
   def prompt
@@ -74,54 +74,28 @@ class Game
   end
 
   def pick
-    move_scores = {}
+    movescores = {}
     return rand(0..6) if @foe_moves < 1
     (0..6).each do |col|
       node = @grid[col].find { |node| node.empty?}
       heading_scores = {}
-      if       node && node.connect?(4, 'O')
+      if        node && node.connect?(4, 'O')
         return col
-      elsif    node && node.connect?(4, 'X')
-        return col
-      elsif    node && node.connect?(3, 'O')
-        node.compass.each do |to, fro|
-          if ((!node.send(to)  || node.send(to).letter  == 'X') &&
-                node.count(fro,'O') == 2)
-                heading_scores[to] = 0
+      elsif     node && node.connect?(4, 'X')
+        movescores[col] = 4
+      elsif     node && node.connect?(3, 'O')
+          if !node.n && node.count('s') == 2
+            movescores[col] = 1
           else
-                heading_scores[to] = (node.count(to, 'O') + node.count(fro, 'O') + 1)
+            movescores[col] = 3
           end
-          if ((!node.send(fro) || node.send(fro).letter == 'X') &&
-                node.count(to, 'O') == 2)
-                heading_scores[fro] = 0
-          else
-                heading_scores[fro] = (node.count(to, 'O') + node.count(fro, 'O') + 1)
-          end
-        end
-        move_scores[col] = heading_scores.values.max
-      elsif    node && node.connect?(2, 'O')
-        node.compass.each do |to, fro|
-          if ((!node.send(to)  || node.send(to).letter  == 'X') &&
-                node.count(fro,'O') == 1)
-                heading_scores[to] = 0
-          else
-                heading_scores[to] = (node.count(to, 'O') + node.count(fro, 'O') + 1)
-          end
-          if ((!node.send(fro) || node.send(fro).letter == 'X') &&
-                node.count(to, 'O') == 1)
-                heading_scores[fro] = 0
-          else
-                heading_scores[fro] = (node.count(to, 'O') + node.count(fro, 'O') + 1)
-          end
-        end
-        move_scores[col] = heading_scores.values.max
-      elsif node 
-        move_scores[col] = 1
+      elsif    node
+        movescores[col] = node.connect('O')
       else
-        move_scores[col] = 0
+        movescores[col] = 0
       end
     end
-    move_scores.key(move_scores.values.max) 
+    movescores.key(movescores.values.max) 
   end
   
   def over(winner)
@@ -139,3 +113,19 @@ class Game
     playorquit
   end
 end
+
+        # node.compass.each do |to, fro|
+        #   if ((!node.send(to)  || node.send(to).letter  == 'X') &&
+        #         node.count(fro,'O') == 2)
+        #         heading_scores[to] = 0
+        #   else
+        #         heading_scores[to] = (node.count(to, 'O') + node.count(fro, 'O') + 1)
+        #   end
+        #   if ((!node.send(fro) || node.send(fro).letter == 'X') &&
+        #         node.count(to, 'O') == 2)
+        #         heading_scores[fro] = 0
+        #   else
+        #         heading_scores[fro] = (node.count(to, 'O') + node.count(fro, 'O') + 1)
+        #   end
+        # end
+        # movescores[col] = heading_scores.values.max
