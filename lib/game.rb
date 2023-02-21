@@ -1,3 +1,4 @@
+require_relative 'board'
 class Game
   attr_reader :board, 
               :grid, 
@@ -7,7 +8,6 @@ class Game
               :foe_moves, 
               :player_moves,
               :difficulty
- 
 
   def initialize
     @board = Board.new(self)
@@ -18,13 +18,60 @@ class Game
     @message = ''
     @foe_moves = 0
     @player_moves = 0
-    @difficulty = 'hard'
+    @difficulty = ''
   end
 
   def start
     puts "\e[H\e[2J"
     puts "Welcome to Connect 4!"
+    sleep(2)
     playorquit
+    selectdifficulty
+  end
+
+  def selectdifficulty
+    puts "\e[H\e[2J"
+    puts "Please select difficulty!\nEasy, Medium, or HARD\n(e, m, h)"
+    answer = gets.chr.downcase
+    if answer == 'e'
+      puts "\e[H\e[2J"
+      puts "You chose Easy!"
+    elsif answer == 'm' 
+      puts "\e[H\e[2J"
+      puts "You chose Medium!"
+    elsif answer =='h'
+      puts "\e[H\e[2J"
+      puts "You chose HARD!!"
+    elsif answer == 'i'
+      puts "\e[H\e[2J"
+      puts "Who told you about the Insane difficulty?!"
+    else
+      selectdifficulty
+    end
+    @difficulty = answer
+    sleep(1.5)
+    puts "\e[H\e[2J" 
+    puts "Good luck, have fun! Let the games begin!"
+    sleep(1)
+    play
+  end
+    
+   def playorquit
+    loop do
+      puts "\nEnter p to play, or q to quit!\n"
+      answer = gets.chr.downcase
+      if answer.downcase == 'p'
+        selectdifficulty
+      elsif answer.downcase == 'q'
+        puts "\e[H\e[2J" 
+        abort("See you next time!")
+      elsif !@under
+        puts "\e[H\e[2J"
+        @board.render("\nOh snap! #{@message} Good game!\n")
+      else
+        start
+      end
+    end
   end
 
   def play
@@ -67,37 +114,69 @@ class Game
     end
   end
 
-  def pick
-    if @difficulty == 'easy'
-      col = nil
-      loop do
-        col = rand(0..6)
-        node = @grid[col].find {|node| node.empty? }
-        break if node
+  def easy_pick
+    col = nil
+  loop do
+    col = rand(0..6)
+    node = @grid[col].find {|node| node.empty? }
+    break if node
+  end
+  col
+  end
+
+  def medium_pick
+    movescores = {}
+    return rand(0..6) if @foe_moves < 2
+    (0..6).each do |col|
+      node = @grid[col].find { |node| node.empty?}
+      if       node && node.connect?(4, 'O')
+        return col
+      elsif    node && node.connect?(4, 'X')
+        return col
+      elsif node 
+        movescores[col] = node.connect('O')
+      else
+        movescores[col] = 0
       end
-      col
-    elsif @difficulty == 'hard'
-      movescores = {}
-      return rand(0..6) if @foe_moves < 1
-      (0..6).each do |col|
-        node = @grid[col].find { |node| node.empty?}
-        if node && node.connect?(4, 'O')
-          return col
-        elsif node && node.connect?(4, 'X')
-          movescores[col] = 4
-        elsif node && node.connect?(3, 'O')
-          if !node.n && node.count('s') == 2
-            movescores[col] = 1
-          else
-            movescores[col] = 3
-          end
-        elsif node
-          movescores[col] = node.connect('O')
-        else
-          movescores[col] = 0
+    end
+    movescores.key(movescores.values.max) 
+  end
+
+  def hard_pick
+    movescores = {}
+    return rand(0..6) if @foe_moves < 2
+    (0..6).each do |col|
+      node = @grid[col].find { |node| node.empty?}
+      if       node && node.connect?(4, 'O')
+        return col
+      elsif    node && node.connect?(4, 'X')
+        movescores[col] = 4
+      elsif    node && node.connect?(3, 'O')
+        if   !node.n && node.count('s', 'O') == 2
+              movescores[col] = 1
+        else  
+              movescores[col] = 3
         end
+      elsif node
+              movescores[col] = node.connect('O')
+      else
+          movescores[col] = 0
       end
-      movescores.key(movescores.values.max) 
+     end
+     movescores.key(movescores.values.max) 
+    end
+
+  def pick
+    if @difficulty == 'e'
+      easy_pick
+    elsif @difficulty == 'm'
+      medium_pick
+    elsif @difficulty == 'h'
+      hard_pick
+    elsif @difficulty == 'i'
+      insane_pick
+    else 
+      return 'error, invalid difficulty setting'
     end
   end
 
@@ -115,41 +194,4 @@ class Game
     sleep(2)
     playorquit
   end
-
-  def playorquit
-    loop do
-      puts "\nEnter p to play, or q to quit!\n"
-      answer = gets.chomp.downcase
-      if answer.downcase == 'p'
-        puts "\e[H\e[2J" 
-        puts "Let the games begin!"
-        sleep(1)
-        play
-      elsif answer.downcase == 'q'
-        puts "\e[H\e[2J" 
-        abort("See you next time!")
-      elsif !@under
-        puts "\e[H\e[2J"
-        @board.render("\nOh snap! #{@message} Good game!\n")
-      else
-        start
-      end
-    end
-  end
 end
-
-# node.compass.each do |to, fro|
-#   if ((!node.send(to)  || node.send(to).letter  == 'X') &&
-#         node.count(fro,'O') == 2)
-#         heading_scores[to] = 0
-#   else
-#         heading_scores[to] = (node.count(to, 'O') + node.count(fro, 'O') + 1)
-#   end
-#   if ((!node.send(fro) || node.send(fro).letter == 'X') &&
-#         node.count(to, 'O') == 2)
-#         heading_scores[fro] = 0
-#   else
-#         heading_scores[fro] = (node.count(to, 'O') + node.count(fro, 'O') + 1)
-#   end
-# end
-# movescores[col] = heading_scores.values.max
