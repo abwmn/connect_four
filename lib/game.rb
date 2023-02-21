@@ -24,39 +24,10 @@ class Game
   def start
     puts "\e[H\e[2J"
     puts "Welcome to Connect 4!"
-    sleep(2)
     playorquit
-    selectdifficulty
   end
 
-  def selectdifficulty
-    puts "\e[H\e[2J"
-    puts "Please select difficulty!\nEasy, Medium, or HARD\n(e, m, h)"
-    answer = gets.chr.downcase
-    if answer == 'e'
-      puts "\e[H\e[2J"
-      puts "You chose Easy!"
-    elsif answer == 'm' 
-      puts "\e[H\e[2J"
-      puts "You chose Medium!"
-    elsif answer =='h'
-      puts "\e[H\e[2J"
-      puts "You chose HARD!!"
-    elsif answer == 'i'
-      puts "\e[H\e[2J"
-      puts "Who told you about the Insane difficulty?!"
-    else
-      selectdifficulty
-    end
-    @difficulty = answer
-    sleep(1.5)
-    puts "\e[H\e[2J" 
-    puts "Good luck, have fun! Let the games begin!"
-    sleep(1)
-    play
-  end
-    
-   def playorquit
+  def playorquit
     loop do
       puts "\nEnter p to play, or q to quit!\n"
       answer = gets.chr.downcase
@@ -72,6 +43,32 @@ class Game
         start
       end
     end
+  end
+
+  def selectdifficulty
+    puts "\e[H\e[2J"
+    puts "Please select difficulty!\nEasy, Medium, or HARD\n(e, m, h)"
+    case answer = gets.chr.downcase
+    when 'e'
+      puts "\e[H\e[2J"
+      puts "You chose Easy!"
+    when 'm' 
+      puts "\e[H\e[2J"
+      puts "You chose Medium!"
+    when 'h'
+      puts "\e[H\e[2J"
+      puts "You chose HARD!!"
+    when 'i'
+      puts "\e[H\e[2J"
+      puts "Who told you about the Insane difficulty?!"
+    else
+      selectdifficulty
+    end
+    @difficulty = answer
+    sleep(1.5)
+    puts "\nGood luck, have fun! Let the games begin!"
+    sleep(1.5)
+    play
   end
 
   def play
@@ -114,32 +111,46 @@ class Game
     end
   end
 
+  def pick
+    case @difficulty
+    when 'e'
+      easy_pick
+    when 'm'
+      medium_pick
+    when 'h'
+      hard_pick
+    when 'i'
+      insane_pick
+    end
+  end
+
   def easy_pick
     col = nil
-  loop do
-    col = rand(0..6)
-    node = @grid[col].find {|node| node.empty? }
-    break if node
-  end
-  col
+    loop do
+      col = rand(0..6)
+      node = @grid[col].find {|node| node.empty? }
+      break if node
+    end
+    col
   end
 
   def medium_pick
     movescores = {}
-    return rand(0..6) if @foe_moves < 2
     (0..6).each do |col|
       node = @grid[col].find { |node| node.empty?}
-      if       node && node.connect?(4, 'O')
+      if node && node.connect?(4, 'O')
         return col
-      elsif    node && node.connect?(4, 'X')
-        return col
-      elsif node 
-        movescores[col] = node.connect('O')
+      elsif node && node.connect?(4, 'X')
+        movescores[col] = 2
+      elsif node
+        movescores[col] = 1
       else
         movescores[col] = 0
       end
     end
-    movescores.key(movescores.values.max) 
+    movescores.keys.find_all do |key| 
+      movescores[key] == movescores.values.max
+    end.sample 
   end
 
   def hard_pick
@@ -163,22 +174,10 @@ class Game
           movescores[col] = 0
       end
      end
-     movescores.key(movescores.values.max) 
+     movescores.keys.find_all do |key| 
+      movescores[key] == movescores.values.max
+    end.sample 
     end
-
-  def pick
-    if @difficulty == 'e'
-      easy_pick
-    elsif @difficulty == 'm'
-      medium_pick
-    elsif @difficulty == 'h'
-      hard_pick
-    elsif @difficulty == 'i'
-      insane_pick
-    else 
-      return 'error, invalid difficulty setting'
-    end
-  end
 
   def over(winner)
     @under = false
