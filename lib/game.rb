@@ -11,9 +11,10 @@ class Game
   def initialize
     @board = Board.new(self)
     @grid = @board.grid
-    @under = false
+    @under = true
     @result = ''
-    @last_winner = ''
+    @message = ''
+    @lastwinner = ''
     @foe_moves = 0
     @player_moves = 0
     @difficulty = 'hard'
@@ -22,7 +23,6 @@ class Game
   def start
     puts "\e[H\e[2J"
     puts "Welcome to Connect 4!"
-    sleep(2)
     playorquit
   end
 
@@ -53,7 +53,7 @@ class Game
   end
 
   def prompt
-    columns = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6 }
+    columns = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6 }.freeze
     loop do
       print "Place your X!\n"
       pick = gets.chomp.downcase
@@ -75,7 +75,7 @@ class Game
         break if node
       end
       col
-    elsif @difficulty
+    elsif @difficulty == 'hard'
       movescores = {}
       return rand(0..6) if @foe_moves < 1
       (0..6).each do |col|
@@ -103,31 +103,35 @@ class Game
   def over(winner)
     @under = false
     @result = winner
-    message = if winner == 'X'
+    @message = if winner == 'X'
       "You win!"
     elsif winner == 'O'
-      "You lose!"
+      "You lose."
     elsif @result == 'draw'
       "Tie game!"
     end
-    @board.render("\nOh snap! #{message}\n\nGood game!")
-    sleep(6)
+    @board.render("\nOh snap! #{@message} Good game!")
+    sleep(3)
     playorquit
   end
 
   def playorquit
-    puts "\e[H\e[2J"
-    puts "Enter p to play, or q to quit!"
-    answer = gets.chomp
-    if answer.downcase == 'p'
-      puts "\e[H\e[2J"
-      puts "Let the games begin!"
-      play
-    elsif answer.downcase == 'q'
-      puts "\e[H\e[2J"
-      abort("See you next time!")
-    else
-      playorquit
+    loop do
+      puts "\nEnter p to play, or q to quit!\n"
+      answer = gets.chomp.downcase
+      if answer.downcase == 'p'
+        puts "\e[H\e[2J" 
+        puts "\nLet the games begin!"
+        play
+      elsif answer.downcase == 'q'
+        puts "\e[H\e[2J" 
+        abort("See you next time!")
+      elsif !@under
+        puts "\e[H\e[2J"
+        @board.render("\nOh snap! #{@message} Good game!\n")
+      else
+        start
+      end
     end
   end
 end
