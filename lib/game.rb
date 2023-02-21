@@ -103,16 +103,7 @@ class Game
 
   def easy_pick
     letter = 'O'
-    col = rand(0..6)
-   until @grid[col].find {|node| node.empty?}
-      col = rand(0..6)
-    end
-    node = @grid[col].find {|node| node.empty?}
-     node.letter = letter
-     if node.connect?(4) || @board.full?
-      @game.over
-    end
-    col
+    @board.place(letter)
   end
 
   def medium_pick
