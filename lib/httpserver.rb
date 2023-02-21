@@ -6,9 +6,9 @@ require_relative 'game'
 # copy code above once code is running to run in chrome
 
 @game = Game.new
-@game.start
+# @game.start
 choice = nil
-server = TCPServer.new(69420)
+server = TCPServer.new(9292)
 loop do
   # Wait for a Request
   # When a request comes in, save the connection to a variable
@@ -29,6 +29,7 @@ loop do
 
   # Generate the Response
   puts "Sending response."
+  @game.start
   output = "#{@board.render}"
   status = "http/1.1 200 ok"
   response = status + "\r\n" + "\r\n" + output
