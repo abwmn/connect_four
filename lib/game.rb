@@ -2,17 +2,18 @@ class Game
   attr_reader :board, 
               :grid, 
               :under, 
-              :result,
+              :winner,
+              :lastwinner,
               :foe_moves, 
               :player_moves,
-              :difficulty,
-              :lastwinner
+              :difficulty
+ 
 
   def initialize
     @board = Board.new(self)
     @grid = @board.grid
     @under = true
-    @result = false
+    @winner = false
     @lastwinner = false
     @message = ''
     @foe_moves = 0
@@ -35,9 +36,9 @@ class Game
 
   def reset
     @under = true
+    @lastwinner = @winner
+    @winner = false
     @board.clear
-    @lastwinner = @result
-    @result = ''
     @foe_moves = 0
     @player_moves = 0
   end
@@ -55,13 +56,13 @@ class Game
   def prompt
     columns = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6 }.freeze
     loop do
-      print "Place your X!\n"
+      print "\nPlace your X from A to G!\n"
       pick = gets.chomp.downcase
       if columns.key?(pick) && @grid[columns[pick]][5].empty?
         return columns[pick]
       else
         puts "\e[H\e[2J"
-        @board.render("\nInvalid input. ")
+        @board.render
       end
     end
   end
@@ -102,12 +103,12 @@ class Game
 
   def over(winner)
     @under = false
-    @result = winner
+    @winner = winner
     @message = if winner == 'X'
       "You win!"
     elsif winner == 'O'
       "You lose."
-    elsif @result == 'draw'
+    elsif winner == 'draw'
       "Tie game!"
     end
     @board.render("\nOh snap! #{@message} Good game!")
@@ -121,7 +122,8 @@ class Game
       answer = gets.chomp.downcase
       if answer.downcase == 'p'
         puts "\e[H\e[2J" 
-        puts "\nLet the games begin!"
+        puts "Let the games begin!"
+        sleep(1)
         play
       elsif answer.downcase == 'q'
         puts "\e[H\e[2J" 
