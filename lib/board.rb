@@ -52,7 +52,7 @@ class Board
     puts message
   end
 
-  def place(letter, col = rand(0..6))
+  def place(letter, col)
     node = @grid[col].find {|node| node.empty?}
     node.letter = letter
     if node.connect?(4) 
