@@ -48,7 +48,7 @@ class Game
     @board.place("X", prompt)
     @player_moves += 1
     @board.render("\nThe foe plots a cunning move.")
-    sleep(2)
+    sleep(1.5)
     @board.place("O", pick)
     @foe_moves += 1
   end
@@ -112,7 +112,7 @@ class Game
       "Tie game!"
     end
     @board.render("\nOh snap! #{@message} Good game!")
-    sleep(3)
+    sleep(2)
     playorquit
   end
 
