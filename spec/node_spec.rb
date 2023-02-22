@@ -2,7 +2,8 @@ require './spec/spec_helper'
 
 RSpec.describe do
   before(:each) do
-    @board = Board.new
+    @game = Game.new
+    @board = @game.board
     @grid = @board.grid
     @node = @grid[3][3]
   end
@@ -59,5 +60,16 @@ RSpec.describe do
       node = node.send(direction)
       @board.render
     end
+  end
+
+  it 'can check next empty across connections' do
+    node = @node
+    node.letter = 'X'
+    node.e.letter = 'X'
+    node.w.letter = 'X'
+    node.w.w.letter = 'O'
+    expect(node.next_empty?('w')).to eq(false)
+    expect(node.next_empty?('e')).to eq(true)
+    expect(node.next_empty?('n')).to eq(true)
   end
 end
