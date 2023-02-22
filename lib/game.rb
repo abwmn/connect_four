@@ -5,9 +5,12 @@ class Game
               :under, 
               :winner,
               :lastwinner,
-              :foe_moves, 
-              :player_moves,
+              # :foe_moves, 
+              # :player_moves,
               :moves,
+              :player_wins,
+              :foe_wins,
+              :draws,
               :difficulty 
 
   def initialize
@@ -17,9 +20,12 @@ class Game
     @winner = false
     @lastwinner = false
     @message = ''
-    @foe_moves = 0
-    @player_moves = 0
+    # @foe_moves = 0
+    # @player_moves = 0
     @moves = 0
+    @player_wins = 0
+    @foe_wins = 0
+    @draws = 0
     @difficulty = ''
   end
 
@@ -87,28 +93,37 @@ class Game
     @lastwinner = @winner
     @winner = false
     @board.clear
-    @foe_moves = 0
-    @player_moves = 0
+    # @foe_moves = 0
+    # @player_moves = 0
     @moves = 0
   end
 
   def take_turns
     @board.render
     @board.place("X", prompt)
-    @player_moves += 1; @moves += 1
+    @moves += 1 #; @player_moves += 1
     @board.render("\nThe foe plots a cunning move.")
     sleep(1.5)
     @board.place("O", pick)
-    @foe_moves += 1; @moves += 1
+    @moves += 1 #; @foe_moves += 1
   end
 
   def prompt
     columns = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6 }.freeze
     loop do
-      print "\nPlace your X from A to G!\n"
+      print "\nEnter A-G to place your X, or R for random!\n"
+      # print "or \"check\" to test your move!\n"
       pick = gets.chomp.downcase
       if columns.key?(pick) && @grid[columns[pick]][5].empty?
         return columns[pick]
+      elsif pick == 'r'
+        col = nil
+        loop do 
+          col = rand(0..6)
+          node = @grid[col].find{|node| node.empty?}
+          break if node
+        end
+        return col
       else
         puts "\e[H\e[2J"
         @board.render
@@ -159,7 +174,7 @@ class Game
   end
 
   def hard_pick
-    return rand(0..6) if @foe_moves < 2
+    return rand(0..6) if @moves < 4
     movescores = {}
     (0..6).each do |col|
       node = @grid[col].find { |node| node.empty?}
@@ -172,6 +187,39 @@ class Game
           movescores[col] = 1
         else  
           movescores[col] = 3
+        end
+      elsif node
+        movescores[col] = node.connect('O')
+      else
+        movescores[col] = 0
+      end
+    end 
+    movescores.keys.find_all do |key| 
+      movescores[key] == movescores.values.max
+    end.sample 
+  end
+
+  def insane_pick
+    return rand(0..6) if @moves < 2
+    movescores = {}
+    (0..6).each do |col|
+      node = @grid[col].find { |node| node.empty?}
+      if node && node.connect?(4, 'O')
+        return col
+      elsif node && node.connect?(4, 'X')
+        if node.any_traps?('O')
+          movescores[col] = 6
+        else
+          movescores[col] = 5
+        end
+      elsif node && node.connect?(3, 'O')
+        if !node.n && node.count('s', 'O') == 2
+          movescores[col] = 1
+        else
+          movescores[col] = 3
+        end
+        if node.any_traps?('O')
+          movescores[col] = 4
         end
       elsif node
         movescores[col] = node.connect('O')
