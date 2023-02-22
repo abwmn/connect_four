@@ -50,8 +50,6 @@ class Board
         next_row.clear
     end
 
-    # moves = @game.player_moves + @game.foe_moves
-
     if @game.under && @game.lastwinner
       puts "\nMoves: #{@game.moves}; Last winner: #{@game.lastwinner}"
     elsif @game.under
