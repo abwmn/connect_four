@@ -43,9 +43,6 @@ class Game
       case answer = gets.chr.downcase
       when 'p'
         humans_or_computers
-        if player2 = #a computer
-          selectdifficulty
-        end
       when 'q'
         puts "\e[H\e[2J" 
         abort("See you next time!")
@@ -60,7 +57,29 @@ class Game
     end
   end
 
-  def selectdifficulty
+  def humans_or_computers
+    puts "\e[H\e[2J" 
+    puts "Is player one a human or a computer?\n(h, c)"
+    case = answer = gets.chr.downcase
+    when 'h'
+      @player1 = Human.new
+    when 'c'
+      @player1 = Computer.new
+      selectdifficulty(@player1)
+      @player1.letter = 'X'
+    end
+    puts "\e[H\e[2J" 
+    puts "What about player two?\n(h, c)"
+    case = answer = gets.chr.downcase
+    when 'h'
+      @player2 = Human.new
+    when 'c'
+      @player2 = Computer.new
+      selectdifficulty(@player2)
+      @player2.letter = 'O'
+  end
+
+  def selectdifficulty(player)
     puts "\e[H\e[2J"
     puts "Please select difficulty!\nEasy, Medium, or HARD\n(e, m, h)"
     case answer = gets.chr.downcase
@@ -79,7 +98,7 @@ class Game
     else
       selectdifficulty
     end
-    @difficulty = answer
+    player.difficulty = answer
     sleep(1.5)
     puts "\nGood luck, have fun! Let the games begin!"
     sleep(1.5)
