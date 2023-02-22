@@ -111,8 +111,8 @@ class Game
   def prompt
     columns = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6 }.freeze
     loop do
-      print "\nEnter A-G to place your X, R for random,\n"
-      print "or \"check\" to test your move!\n"
+      print "\nEnter A-G to place your X, or R for random!\n"
+      # print "or \"check\" to test your move!\n"
       pick = gets.chomp.downcase
       if columns.key?(pick) && @grid[columns[pick]][5].empty?
         return columns[pick]
