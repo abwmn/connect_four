@@ -36,4 +36,12 @@ class Node
   def connect?(length = 4, letter = @letter)
     connect(letter) >= length
   end
+
+  def next_empty?(heading, letter = @letter)
+    node = self
+    until node&.send(heading)&.letter != letter
+      node = node&.send(heading)
+    end
+    node&.send(heading)&.empty?
+  end
 end
