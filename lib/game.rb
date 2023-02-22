@@ -206,6 +206,11 @@ class Game
       node = @grid[col].find { |node| node.empty?}
       if node && node.connect?(4, 'O')
         return col
+      elsif node && node.connect?(4, 'X')
+        if node.any_traps?('O')
+          movescores[col] = 6
+        else
+          movescores[col] = 5
       elsif node && node.connect?(3, 'O')
         if !node.n && node.count('s', 'O') == 2
           movescores[col] = 1
@@ -213,14 +218,8 @@ class Game
           movescores[col] = 3
         end
         if node.any_traps?('O')
-          if node.connect?(4, 'X')
-            movescores[col] = 6
-          else
-            movescores[col] = 4
-          end
+          movescores[col] = 4
         end
-      elsif node && node.connect?(4, 'X')
-        movescores[col] = 5
       elsif node
         movescores[col] = node.connect('O')
       else
