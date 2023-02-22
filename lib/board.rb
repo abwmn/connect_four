@@ -50,8 +50,8 @@ class Board
         next_row.clear
     end
 
-    if @game.under && @game.lastwinner
-      puts "\nMoves: #{@game.moves}; Last winner: #{@game.lastwinner}"
+    if @game.under && @game.winner
+      puts "\nMoves: #{@game.moves}; Last winner: #{@game.winner}"
     elsif @game.under
       puts "\nMoves: #{@game.moves}"
     else
@@ -66,7 +66,7 @@ class Board
     if node.connect?(4) 
       @game.over(letter)
     elsif full?
-      @game.over('draw')
+      @game.over('none')
     end
   end
 
