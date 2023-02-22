@@ -7,7 +7,8 @@ class Game
               :lastwinner,
               :foe_moves, 
               :player_moves,
-              :difficulty
+              :moves,
+              :difficulty 
 
   def initialize
     @board = Board.new(self)
@@ -18,6 +19,7 @@ class Game
     @message = ''
     @foe_moves = 0
     @player_moves = 0
+    @moves = 0
     @difficulty = ''
   end
 
@@ -30,17 +32,19 @@ class Game
   def playorquit
     loop do
       puts "\nEnter p to play, or q to quit!\n"
-      answer = gets.chr.downcase
-      if answer.downcase == 'p'
+      case answer = gets.chr.downcase
+      when 'p'
         selectdifficulty
-      elsif answer.downcase == 'q'
+      when 'q'
         puts "\e[H\e[2J" 
         abort("See you next time!")
-      elsif !@under
-        puts "\e[H\e[2J"
-        @board.render("\nOh snap! #{@message} Good game!\n")
       else
-        start
+        if !@under
+          puts "\e[H\e[2J"
+          @board.render("\noh SNAP! #{@message}\n")
+        else
+          start
+        end
       end
     end
   end
@@ -85,16 +89,17 @@ class Game
     @board.clear
     @foe_moves = 0
     @player_moves = 0
+    @moves = 0
   end
 
   def take_turns
     @board.render
     @board.place("X", prompt)
-    @player_moves += 1
+    @player_moves += 1; @moves += 1
     @board.render("\nThe foe plots a cunning move.")
     sleep(1.5)
     @board.place("O", pick)
-    @foe_moves += 1
+    @foe_moves += 1; @moves += 1
   end
 
   def prompt
@@ -154,42 +159,43 @@ class Game
   end
 
   def hard_pick
-    movescores = {}
     return rand(0..6) if @foe_moves < 2
+    movescores = {}
     (0..6).each do |col|
       node = @grid[col].find { |node| node.empty?}
-      if       node && node.connect?(4, 'O')
+      if node && node.connect?(4, 'O')
         return col
-      elsif    node && node.connect?(4, 'X')
+      elsif node && node.connect?(4, 'X')
         movescores[col] = 4
-      elsif    node && node.connect?(3, 'O')
-        if   !node.n && node.count('s', 'O') == 2
-              movescores[col] = 1
+      elsif node && node.connect?(3, 'O')
+        if !node.n && node.count('s', 'O') == 2
+          movescores[col] = 1
         else  
-              movescores[col] = 3
+          movescores[col] = 3
         end
       elsif node
-              movescores[col] = node.connect('O')
+        movescores[col] = node.connect('O')
       else
-          movescores[col] = 0
+        movescores[col] = 0
       end
-     end
-     movescores.keys.find_all do |key| 
+    end 
+    movescores.keys.find_all do |key| 
       movescores[key] == movescores.values.max
     end.sample 
-    end
+  end
 
   def over(winner)
     @under = false
     @winner = winner
-    @message = if winner == 'X'
-      "You win!"
-    elsif winner == 'O'
-      "You lose."
-    elsif winner == 'draw'
-      "Tie game!"
+    @message = case winner
+    when 'X'
+      "you WIN!! Good game!"
+    when 'O'
+      "you LOSE. Better luck next time!"
+    when 'draw'
+      "TIE GAME!?! Wow!! Good game!"
     end
-    @board.render("\nOh snap! #{@message} Good game!")
+    @board.render("\noh SNAP! #{@message}")
     sleep(2)
     playorquit
   end
