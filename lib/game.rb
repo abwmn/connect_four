@@ -1,4 +1,7 @@
 require_relative 'board'
+require_relative 'human_player'
+require_relative 'computer_player'
+require_relative 'player'
 class Game
   attr_reader :board, 
               :grid, 
@@ -11,7 +14,9 @@ class Game
               :player_wins,
               :foe_wins,
               :draws,
-              :difficulty 
+              :difficulty, #maybe remove this? 
+              :player1,
+              :player2 
 
   def initialize
     @board = Board.new(self)
@@ -58,25 +63,28 @@ class Game
   end
 
   def humans_or_computers
+    # loop do
     puts "\e[H\e[2J" 
     puts "Is player one a human or a computer?\n(h, c)"
-    case = answer = gets.chr.downcase
-    when 'h'
-      @player1 = Human.new
-    when 'c'
-      @player1 = Computer.new
-      selectdifficulty(@player1)
-      @player1.letter = 'X'
-    end
+    answer = gets.chr.downcase
+     if answer == 'h'
+       @player1 = Human.new
+      elsif answer == 'c'
+        @player1 = Computer.new
+        selectdifficulty(@player1)
+        @player1.letter = 'X'
+      end
     puts "\e[H\e[2J" 
     puts "What about player two?\n(h, c)"
-    case = answer = gets.chr.downcase
-    when 'h'
-      @player2 = Human.new
-    when 'c'
-      @player2 = Computer.new
-      selectdifficulty(@player2)
-      @player2.letter = 'O'
+    answer = gets.chr.downcase
+     if answer == 'h'
+        @player2 = Human.new
+     elsif answer == 'c'
+        @player2 = Computer.new
+        selectdifficulty(@player2)
+        @player2.letter = 'O'
+      end
+    # end
   end
 
   def selectdifficulty(player)
@@ -124,12 +132,25 @@ class Game
 
   def take_turns
     @board.render
-    @board.place("X", prompt)
+      if player1.turn == 'h'
+        @board.place(player1.letter, prompt)
+      elsif player1.turn == 'c'
+       @board.place(player1.letter, player1.pick)
+      else
+        false
+      end
     @moves += 1 #; @player_moves += 1
-    @board.render("\nThe foe plots a cunning move.")
-    sleep(1.5)
-    @board.place("O", pick)
-    @moves += 1 #; @foe_moves += 1
+    @board.render("\nYour move player two!")
+    if player2.turn == 'h'
+      @board.place(player2.letter, prompt)
+    elsif player2.turn == 'c'
+      sleep(1.5)
+     @board.place(player2.letter, player2.pick)
+    else
+      false
+    end
+    # @board.place("O", pick)
+    # @moves += 1 #; @foe_moves += 1
   end
 
   def prompt
@@ -155,106 +176,18 @@ class Game
     end
   end
 
-  def pick
-    case @difficulty
-    when 'e'
-      easy_pick
-    when 'm'
-      medium_pick
-    when 'h'
-      hard_pick
-    when 'i'
-      insane_pick
-    end
-  end
-
-  def easy_pick
-    col = nil
-    loop do
-      col = rand(0..6)
-      node = @grid[col].find {|node| node.empty? }
-      break if node
-    end
-    col
-  end
-
-  def medium_pick
-    movescores = {}
-    (0..6).each do |col|
-      node = @grid[col].find { |node| node.empty?}
-      if node && node.connect?(4, 'O')
-        return col
-      elsif node && node.connect?(4, 'X')
-        movescores[col] = 2
-      elsif node
-        movescores[col] = 1
-      else
-        movescores[col] = 0
-      end
-    end
-    movescores.keys.find_all do |key| 
-      movescores[key] == movescores.values.max
-    end.sample 
-  end
-
-  def hard_pick
-    return rand(0..6) if @moves < 4
-    movescores = {}
-    (0..6).each do |col|
-      node = @grid[col].find { |node| node.empty?}
-      if node && node.connect?(4, 'O')
-        return col
-      elsif node && node.connect?(4, 'X')
-        movescores[col] = 4
-      elsif node && node.connect?(3, 'O')
-        if !node.n && node.count('s', 'O') == 2
-          movescores[col] = 1
-        else  
-          movescores[col] = 3
-        end
-      elsif node
-        movescores[col] = node.connect('O')
-      else
-        movescores[col] = 0
-      end
-    end 
-    movescores.keys.find_all do |key| 
-      movescores[key] == movescores.values.max
-    end.sample 
-  end
-
-  def insane_pick
-    return rand(0..6) if @moves < 2
-    movescores = {}
-    (0..6).each do |col|
-      node = @grid[col].find { |node| node.empty?}
-      if node && node.connect?(4, 'O')
-        return col
-      elsif node && node.connect?(4, 'X')
-        if node.any_traps?('O')
-          movescores[col] = 6
-        else
-          movescores[col] = 5
-        end
-      elsif node && node.connect?(3, 'O')
-        if !node.n && node.count('s', 'O') == 2
-          movescores[col] = 1
-        else
-          movescores[col] = 3
-        end
-        if node.any_traps?('O')
-          movescores[col] = 4
-        end
-      elsif node
-        movescores[col] = node.connect('O')
-      else
-        movescores[col] = 0
-      end
-    end 
-    movescores.keys.find_all do |key| 
-      movescores[key] == movescores.values.max
-    end.sample 
-  end
+  # def pick
+  #   case @difficulty
+  #   when 'e'
+  #     easy_pick
+  #   when 'm'
+  #     medium_pick
+  #   when 'h'
+  #     hard_pick
+  #   when 'i'
+  #     insane_pick
+  #   end
+  # end
 
   def over(winner)
     @under = false
