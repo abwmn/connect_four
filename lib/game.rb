@@ -27,6 +27,8 @@ class Game
     @foe_wins = 0
     @draws = 0
     @difficulty = ''
+    @player1 = player1
+    @player2 = player2
   end
 
   def start
@@ -40,7 +42,10 @@ class Game
       puts "\nEnter p to play, or q to quit!\n"
       case answer = gets.chr.downcase
       when 'p'
-        selectdifficulty
+        humans_or_computers
+        if player2 = #a computer
+          selectdifficulty
+        end
       when 'q'
         puts "\e[H\e[2J" 
         abort("See you next time!")
