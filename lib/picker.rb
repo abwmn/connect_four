@@ -1,6 +1,7 @@
+require_relative 'board'
 module Picker
-  def pick
-    case @difficulty
+  def pick(player)
+    case player.difficulty
     when 'e'
       easy_pick
     when 'm'
@@ -13,7 +14,7 @@ module Picker
   end
   
   def easy_pick
-    col = nil
+    col = 10
     loop do
       col = rand(0..6)
       node = @grid[col].find {|node| node.empty? }

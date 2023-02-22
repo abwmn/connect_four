@@ -1,7 +1,7 @@
 require_relative 'Picker'
 require_relative 'player'
 class Human < Player
-  attr_reader :turn
+  attr_reader :turn, :letter
   include Picker
   def initialize
     @turn = 'h'
