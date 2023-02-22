@@ -1,4 +1,8 @@
 require_relative 'board'
+require_relative 'human_player'
+require_relative 'computer_player'
+require_relative 'player'
+require_relative 'prompter'
 require_relative 'picker'
 require_relative 'prompter'
 class Game
@@ -8,14 +12,14 @@ class Game
               :grid, 
               :under, 
               :winner,
-              # :lastwinner,
-              # :foe_moves, 
-              # :player_moves,
+              :lastwinner,
               :moves,
               :wins,
               :losses,
               :draws,
-              :difficulty 
+              :player1,
+              :player2, 
+              :current_player
 
   def initialize
     @board = Board.new(self)
@@ -24,13 +28,14 @@ class Game
     @winner = false
     # @lastwinner = false
     @message = ''
-    # @foe_moves = 0
-    # @player_moves = 0
     @moves = 0
     @wins = 0
     @losses = 0
     @draws = 0
     @difficulty = ''
+    @player1 = player1
+    @player2 = player2
+    @current_player = player1
   end
 
   def start
@@ -52,15 +57,26 @@ class Game
 
   def take_turns
     @board.render
-    @board.place("X", prompt)
-    @moves += 1 #; @player_moves += 1
-    @board.render("\nThe foe plots a cunning move.")
-    sleep(1.5)
-    @board.place("O", pick)
-    @moves += 1 #; @foe_moves += 1
+      if @player1.turn == 'h'
+        @board.place(@player1.letter, prompt)
+      elsif @player1.turn == 'c'
+       @board.place(@player1.letter, pick(@player1))
+      else
+        false
+      end
+    @moves += 1
+    @board.render("\nYour move player two!")
+    if @player2.turn == 'h'
+      @board.place(@player2.letter, prompt)
+    elsif @player2.turn == 'c'
+      sleep(1.5)
+     @board.place(@player2.letter, pick(@player2))
+    else
+      false
+    end
   end
 
-  def over(result)
+  def over(winner)
     @under = false
     @winner = result
     case @winner
