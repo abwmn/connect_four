@@ -26,7 +26,6 @@ class Game
     @grid = @board.grid
     @under = true
     @winner = false
-    # @lastwinner = false
     @message = ''
     @moves = 0
     @wins = 0
