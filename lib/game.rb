@@ -5,9 +5,13 @@ class Game
               :under, 
               :winner,
               :lastwinner,
-              :foe_moves, 
-              :player_moves,
-              :difficulty
+              # :foe_moves, 
+              # :player_moves,
+              :moves,
+              :player_wins,
+              :foe_wins,
+              :draws,
+              :difficulty 
 
   def initialize
     @board = Board.new(self)
@@ -16,8 +20,12 @@ class Game
     @winner = false
     @lastwinner = false
     @message = ''
-    @foe_moves = 0
-    @player_moves = 0
+    # @foe_moves = 0
+    # @player_moves = 0
+    @moves = 0
+    @player_wins = 0
+    @foe_wins = 0
+    @draws = 0
     @difficulty = ''
   end
 
@@ -30,17 +38,19 @@ class Game
   def playorquit
     loop do
       puts "\nEnter p to play, or q to quit!\n"
-      answer = gets.chr.downcase
-      if answer.downcase == 'p'
+      case answer = gets.chr.downcase
+      when 'p'
         selectdifficulty
-      elsif answer.downcase == 'q'
+      when 'q'
         puts "\e[H\e[2J" 
         abort("See you next time!")
-      elsif !@under
-        puts "\e[H\e[2J"
-        @board.render("\nOh snap! #{@message} Good game!\n")
       else
-        start
+        if !@under
+          puts "\e[H\e[2J"
+          @board.render("\noh SNAP! #{@message}\n")
+        else
+          start
+        end
       end
     end
   end
@@ -83,27 +93,37 @@ class Game
     @lastwinner = @winner
     @winner = false
     @board.clear
-    @foe_moves = 0
-    @player_moves = 0
+    # @foe_moves = 0
+    # @player_moves = 0
+    @moves = 0
   end
 
   def take_turns
     @board.render
     @board.place("X", prompt)
-    @player_moves += 1
+    @moves += 1 #; @player_moves += 1
     @board.render("\nThe foe plots a cunning move.")
     sleep(1.5)
     @board.place("O", pick)
-    @foe_moves += 1
+    @moves += 1 #; @foe_moves += 1
   end
 
   def prompt
     columns = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6 }.freeze
     loop do
-      print "\nPlace your X from A to G!\n"
+      print "\nEnter A-G to place your X, or R for random!\n"
+      # print "or \"check\" to test your move!\n"
       pick = gets.chomp.downcase
       if columns.key?(pick) && @grid[columns[pick]][5].empty?
         return columns[pick]
+      elsif pick == 'r'
+        col = nil
+        loop do 
+          col = rand(0..6)
+          node = @grid[col].find{|node| node.empty?}
+          break if node
+        end
+        return col
       else
         puts "\e[H\e[2J"
         @board.render
@@ -154,45 +174,76 @@ class Game
   end
 
   def hard_pick
+    return rand(0..6) if @moves < 4
     movescores = {}
-    return rand(0..6) if @foe_moves < 2
     (0..6).each do |col|
       node = @grid[col].find { |node| node.empty?}
-      if       node && node.connect?(4, 'O')
+      if node && node.connect?(4, 'O')
         return col
-      elsif    node && node.connect?(4, 'X')
+      elsif node && node.connect?(4, 'X')
         movescores[col] = 4
-      elsif    node && node.connect?(3, 'O')
-        if node.n
-          node.n.connect?(4, 'X')
-          movescores[col] = -1
-        elsif   !node.n && node.count('s', 'O') == 2
-              movescores[col] = 1
+      elsif node && node.connect?(3, 'O')
+        if !node.n && node.count('s', 'O') == 2
+          movescores[col] = 1
         else  
-              movescores[col] = 3
+          movescores[col] = 3
         end
       elsif node
-              movescores[col] = node.connect('O')
+        movescores[col] = node.connect('O')
       else
-          movescores[col] = 0
+        movescores[col] = 0
       end
-     end
-     movescores.keys.find_all do |key| 
+    end 
+    movescores.keys.find_all do |key| 
       movescores[key] == movescores.values.max
     end.sample 
-    end
+  end
+
+  def insane_pick
+    return rand(0..6) if @moves < 2
+    movescores = {}
+    (0..6).each do |col|
+      node = @grid[col].find { |node| node.empty?}
+      if node && node.connect?(4, 'O')
+        return col
+      elsif node && node.connect?(4, 'X')
+        if node.any_traps?('O')
+          movescores[col] = 6
+        else
+          movescores[col] = 5
+        end
+      elsif node && node.connect?(3, 'O')
+        if !node.n && node.count('s', 'O') == 2
+          movescores[col] = 1
+        else
+          movescores[col] = 3
+        end
+        if node.any_traps?('O')
+          movescores[col] = 4
+        end
+      elsif node
+        movescores[col] = node.connect('O')
+      else
+        movescores[col] = 0
+      end
+    end 
+    movescores.keys.find_all do |key| 
+      movescores[key] == movescores.values.max
+    end.sample 
+  end
 
   def over(winner)
     @under = false
     @winner = winner
-    @message = if winner == 'X'
-      "You win!"
-    elsif winner == 'O'
-      "You lose."
-    elsif winner == 'draw'
-      "Tie game!"
+    @message = case winner
+    when 'X'
+      "you WIN!! Good game!"
+    when 'O'
+      "you LOSE. Better luck next time!"
+    when 'draw'
+      "TIE GAME!?! Wow!! Good game!"
     end
-    @board.render("\nOh snap! #{@message} Good game!")
+    @board.render("\noh SNAP! #{@message}")
     sleep(2)
     playorquit
   end

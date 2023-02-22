@@ -36,4 +36,23 @@ class Node
   def connect?(length = 4, letter = @letter)
     connect(letter) >= length
   end
+
+  def next_empty?(heading, letter = @letter)
+    node = self
+    until node&.send(heading)&.letter != letter
+      node = node&.send(heading)
+    end
+    node&.send(heading)&.empty?
+  end
+
+  def any_traps?(letter)
+    @compass.each do |fore, aft|
+      if self.next_empty?(fore, letter) && 
+         self.next_empty?(aft, letter)  &&
+         self.count(fore) + self.count(aft) + 1 == 3
+          return true
+      end
+    end
+    false
+  end
 end
