@@ -42,10 +42,6 @@ class Game
     playorquit
   end
 
-  
-
-  
-
   def play
     reset
     until !@under
@@ -81,8 +77,6 @@ class Game
       false
     end
   end
-
-  
 
   def over(winner)
     @under = false
