@@ -163,7 +163,10 @@ class Game
       elsif    node && node.connect?(4, 'X')
         movescores[col] = 4
       elsif    node && node.connect?(3, 'O')
-        if   !node.n && node.count('s', 'O') == 2
+        if node.n
+          node.n.connect?(4, 'X')
+          movescores[col] = -1
+        elsif   !node.n && node.count('s', 'O') == 2
               movescores[col] = 1
         else  
               movescores[col] = 3
