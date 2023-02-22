@@ -8,7 +8,7 @@ class Game
               :foe_moves, 
               :player_moves,
               :moves,
-              :difficulty
+              :difficulty 
 
   def initialize
     @board = Board.new(self)
