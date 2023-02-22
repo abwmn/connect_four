@@ -39,6 +39,7 @@ class Board
 
   def render(message=nil)
     puts "\e[H\e[2J"
+    print "Your record: #{@game.wins} - #{@game.losses} - #{@game.draws}\n\n" if @game.winner
     padding = '      '
     puts padding + 'A B C D E F G'
     next_row = []
