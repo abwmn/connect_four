@@ -2,7 +2,7 @@ require './spec/spec_helper'
 
 RSpec.describe do
   before(:each) do
-    @game = Game.new
+    @game = Game.new #initialize game bc board.render references game state
     @board = @game.board
     @grid = @board.grid
     @node = @grid[3][3]
