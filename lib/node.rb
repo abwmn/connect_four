@@ -44,4 +44,15 @@ class Node
     end
     node&.send(heading)&.empty?
   end
+
+  def any_traps?(letter)
+    @compass.each do |fore, aft|
+      if self.next_empty?(fore, letter) && 
+         self.next_empty?(aft, letter)  &&
+         self.count(fore) + self.count(aft) + 1 == 3
+          return true
+      end
+    end
+    false
+  end
 end
