@@ -1,7 +1,9 @@
 require_relative 'board'
 require_relative 'picker'
+require_relative 'prompter'
 class Game
   include Picker
+  include Prompter
   attr_reader :board, 
               :grid, 
               :under, 
@@ -10,8 +12,8 @@ class Game
               # :foe_moves, 
               # :player_moves,
               :moves,
-              :player_wins,
-              :foe_wins,
+              :wins,
+              :losses,
               :draws,
               :difficulty 
 
@@ -25,8 +27,8 @@ class Game
     # @foe_moves = 0
     # @player_moves = 0
     @moves = 0
-    @player_wins = 0
-    @foe_wins = 0
+    @wins = 0
+    @losses = 0
     @draws = 0
     @difficulty = ''
   end
@@ -37,64 +39,14 @@ class Game
     playorquit
   end
 
-  def playorquit
-    loop do
-      puts "\nEnter p to play, or q to quit!\n"
-      case answer = gets.chr.downcase
-      when 'p'
-        selectdifficulty
-      when 'q'
-        clear 
-        abort("See you next time!")
-      else
-        if !@under
-          clear
-          @board.render("\noh SNAP! #{@message}\n")
-        else
-          start
-        end
-      end
-    end
-  end
-
-  def selectdifficulty
-    clear
-    puts "Please select difficulty!\nEasy, Medium, or HARD\n(e, m, h)"
-    answer = gets.chr.downcase
-    msg = case answer
-    when'e'
-      "You chose Easy!"
-    when 'm' 
-      "You chose Medium!"
-    when 'h'
-      "You chose HARD!!"
-    when 'i'
-      "Who told you about the Insane difficulty?!"
-    else
-      selectdifficulty
-    end
-    @difficulty = answer
-    clear
-    puts msg
-    puts "\nGood luck, have fun! Let the games begin!"
-    sleep(1.5)
-    play
-  end
-
   def play
     reset
-    until !@under
-      take_turns
-    end
+    take_turns until !@under
   end
 
   def reset
     @under = true
-    # @lastwinner = @winner
-    # @winner = false
     @board.clear
-    # @foe_moves = 0
-    # @player_moves = 0
     @moves = 0
   end
 
@@ -108,46 +60,22 @@ class Game
     @moves += 1 #; @foe_moves += 1
   end
 
-  def prompt
-    columns = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6 }.freeze
-    loop do
-      print "\nEnter A-G to place your X, or R for random!\n"
-      # print "or \"check\" to test your move!\n"
-      pick = gets.chomp.downcase
-      if columns.key?(pick) && @grid[columns[pick]][5].empty?
-        return columns[pick]
-      elsif pick == 'r'
-        col = nil
-        loop do 
-          col = rand(0..6)
-          node = @grid[col].find{|node| node.empty?}
-          break if node
-        end
-        return col
-      else
-        clear
-        @board.render
-      end
-    end
-  end
-
   def over(result)
     @under = false
     @winner = result
-    @message = case result
+    case @winner
     when 'X'
-      "you WIN!! Good game!"
+      @message = "you WIN!! Good game!"
+      @wins += 1
     when 'O'
-      "you LOSE. Better luck next time!"
+      @message = "you LOSE. Better luck next time!"
+      @losses += 1
     when 'none'
-      "TIE GAME!?! Wow!! Good game!"
+      @message = "TIE GAME!?! Wow!! Good game!"
+      @draws += 1
     end
-    @board.render("\noh SNAP! #{@message}")
+    @board.render("...oh SNAP! #{@message}")
     sleep(2)
     playorquit
-  end
-
-  def clear
-    puts "\e[H\e[2J"
   end
 end
