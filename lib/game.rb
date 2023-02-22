@@ -211,6 +211,7 @@ class Game
           movescores[col] = 6
         else
           movescores[col] = 5
+        end
       elsif node && node.connect?(3, 'O')
         if !node.n && node.count('s', 'O') == 2
           movescores[col] = 1
