@@ -6,7 +6,7 @@ class Game
               :grid, 
               :under, 
               :winner,
-              :lastwinner,
+              # :lastwinner,
               # :foe_moves, 
               # :player_moves,
               :moves,
@@ -20,7 +20,7 @@ class Game
     @grid = @board.grid
     @under = true
     @winner = false
-    @lastwinner = false
+    # @lastwinner = false
     @message = ''
     # @foe_moves = 0
     # @player_moves = 0
@@ -32,7 +32,7 @@ class Game
   end
 
   def start
-    puts "\e[H\e[2J"
+    clear
     puts "Welcome to Connect 4!"
     playorquit
   end
@@ -44,11 +44,11 @@ class Game
       when 'p'
         selectdifficulty
       when 'q'
-        puts "\e[H\e[2J" 
+        clear 
         abort("See you next time!")
       else
         if !@under
-          puts "\e[H\e[2J"
+          clear
           @board.render("\noh SNAP! #{@message}\n")
         else
           start
@@ -58,26 +58,24 @@ class Game
   end
 
   def selectdifficulty
-    puts "\e[H\e[2J"
+    clear
     puts "Please select difficulty!\nEasy, Medium, or HARD\n(e, m, h)"
-    case answer = gets.chr.downcase
-    when 'e'
-      puts "\e[H\e[2J"
-      puts "You chose Easy!"
+    answer = gets.chr.downcase
+    msg = case answer
+    when'e'
+      "You chose Easy!"
     when 'm' 
-      puts "\e[H\e[2J"
-      puts "You chose Medium!"
+      "You chose Medium!"
     when 'h'
-      puts "\e[H\e[2J"
-      puts "You chose HARD!!"
+      "You chose HARD!!"
     when 'i'
-      puts "\e[H\e[2J"
-      puts "Who told you about the Insane difficulty?!"
+      "Who told you about the Insane difficulty?!"
     else
       selectdifficulty
     end
     @difficulty = answer
-    sleep(1.5)
+    clear
+    puts msg
     puts "\nGood luck, have fun! Let the games begin!"
     sleep(1.5)
     play
@@ -92,8 +90,8 @@ class Game
 
   def reset
     @under = true
-    @lastwinner = @winner
-    @winner = false
+    # @lastwinner = @winner
+    # @winner = false
     @board.clear
     # @foe_moves = 0
     # @player_moves = 0
@@ -127,24 +125,29 @@ class Game
         end
         return col
       else
-        puts "\e[H\e[2J"
+        clear
         @board.render
       end
     end
   end
-  def over(winner)
+
+  def over(result)
     @under = false
-    @winner = winner
-    @message = case winner
+    @winner = result
+    @message = case result
     when 'X'
       "you WIN!! Good game!"
     when 'O'
       "you LOSE. Better luck next time!"
-    when 'draw'
+    when 'none'
       "TIE GAME!?! Wow!! Good game!"
     end
     @board.render("\noh SNAP! #{@message}")
     sleep(2)
     playorquit
+  end
+
+  def clear
+    puts "\e[H\e[2J"
   end
 end
