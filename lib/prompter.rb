@@ -38,7 +38,7 @@ module Prompter
     else
       if !@under
         clear
-        @board.render("\noh SNAP! #{@message}\n")
+        @board.render("\noh SNAP! #{@message}")
         playorquit
       else
         start

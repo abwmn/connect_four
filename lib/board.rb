@@ -39,7 +39,6 @@ class Board
 
   def render(message=nil)
     puts "\e[H\e[2J"
-    print "Your record: #{@game.wins} - #{@game.losses} - #{@game.draws}\n\n" if @game.winner
     padding = '      '
     puts padding + 'A B C D E F G'
     next_row = []
@@ -47,10 +46,11 @@ class Board
       (0..6).each do |col|
         next_row << @grid[col][row].letter
       end
-        puts padding + next_row.join(" ")
-        next_row.clear
+      puts padding + next_row.join(" ")
+      next_row.clear
     end
-
+    puts "\nP1 wins: #{@game.wins} - P2 wins: #{@game.losses} - Draws: #{@game.draws}\n" if @game.winner
+    # puts "Player2's record: #{@game.losses} - #{@game.wins} - #{@game.draws}\n" if @game.winner
     if @game.under && @game.winner
       puts "\nMoves: #{@game.moves}; Last winner: #{@game.winner}"
     elsif @game.under

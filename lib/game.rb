@@ -59,15 +59,15 @@ class Game
       @board.place(@player1.letter, prompt)
     elsif @player1.type == 'c'
        @board.place(@player1.letter, pick(@player1))
-       sleep(1.5)
+       sleep(1.2)
     end
     @moves += 1
-    @board.render("\nPlayer 2's turn...")
+    @board.render("Player 2's turn...")
     if @player2.type == 'h'
       @board.place(@player2.letter, prompt)
     elsif @player2.type == 'c'
       @board.place(@player2.letter, pick(@player2))
-      sleep(1.5)
+      sleep(1.2)
     end
     @moves += 1
   end
@@ -77,16 +77,16 @@ class Game
     @winner = result
     case @winner
     when 'X'
-      @message = "you WIN!! Good game!"
+      @message = "Player1 WINS!!"
       @wins += 1
     when 'O'
-      @message = "you LOSE. Better luck next time!"
+      @message = "Player2 WINS!!"
       @losses += 1
     when 'none'
-      @message = "TIE GAME!?! Wow!! Good game!"
+      @message = "TIE GAME!?! Wow!!"
       @draws += 1
     end
-    @board.render("...oh SNAP! #{@message}")
+    @board.render("...oh SNAP! #{@message} Good game!")
     sleep(2)
     playorquit
   end
