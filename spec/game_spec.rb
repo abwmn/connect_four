@@ -7,7 +7,13 @@ RSpec.describe do
   it 'exists' do
     expect(@game).to be_a(Game)
   end
-end
 
-@game = Game.new
-@game.start
+  it 'initializes players' do
+    expect(@game.player1.letter).to eq('X')
+    expect(@game.player2.letter).to eq('O')
+  end
+
+  it 'initializes board' do
+    @game.board.render
+  end
+end

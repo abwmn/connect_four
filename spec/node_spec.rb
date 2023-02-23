@@ -72,4 +72,17 @@ RSpec.describe do
     expect(node.next_empty?('e')).to eq(true)
     expect(node.next_empty?('n')).to eq(true)
   end
+
+  it 'checks for traps' do
+    trap_node = @board.grid[3][0] #d1
+    untrap_node = @board.grid[1][0] #b1
+    @board.grid[2][0].letter = 'O' #c1
+    @board.grid[4][0].letter = 'O'#e1
+    @board.grid[0][0].letter = 'X'#a1
+    @board.grid[0][1].letter = 'X'#a2
+    @board.render
+
+    expect(untrap_node.any_traps?('O')).to eq(false)
+    expect(trap_node.any_traps?('O')).to eq(true)
+  end
 end

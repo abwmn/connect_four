@@ -25,8 +25,15 @@ RSpec.describe Board do
     expect(@grid[2][0].letter).to eq("X")
   end
 
-  it 'places random' do
-    expect(@grid[@board.place("X")].find {|node|!node.empty?}.letter).to eq("X")
+  it 'knows when not full' do
+    expect(@board.full?).to eq(false)
+    (0..6).each do |col|
+      (0..5).each do |row|
+        @grid[col][row].letter = 'X'
+      end
+    end
+    @grid[3][5].letter = '.'
+    expect(@board.full?).to eq(false)
   end
 
   it 'knows when full' do
