@@ -56,26 +56,26 @@ class Game
 
   def take_turns
     @board.render
-      if @player1.turn == 'h'
-        @board.place(@player1.letter, prompt)
-      elsif @player1.turn == 'c'
+    if @player1.turn == 'h'
+      @board.place(@player1.letter, prompt)
+    elsif @player1.turn == 'c'
        @board.place(@player1.letter, pick(@player1))
-      else
-        false
-      end
+    else
+      false
+    end
     @moves += 1
     @board.render("\nYour move player two!")
     if @player2.turn == 'h'
       @board.place(@player2.letter, prompt)
     elsif @player2.turn == 'c'
       sleep(1.5)
-     @board.place(@player2.letter, pick(@player2))
+      @board.place(@player2.letter, pick(@player2))
     else
       false
     end
   end
 
-  def over(winner)
+  def over(result)
     @under = false
     @winner = result
     case @winner
