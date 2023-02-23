@@ -64,7 +64,7 @@ class Board
   def place(letter, col)
     node = @grid[col].find {|node| node.empty?}
     node.letter = letter
-    if node.connect?(4) 
+    if node.connect?(4, letter) 
       @game.over(letter)
     elsif full?
       @game.over('none')
