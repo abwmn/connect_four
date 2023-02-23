@@ -16,10 +16,10 @@ class Game
               :moves,
               :wins,
               :losses,
-              :draws,
-              :player1,
-              :player2, 
+              :draws, 
               :current_player
+  attr_accessor :player1,
+                :player2
 
   def initialize
     @board = Board.new(self)
@@ -32,9 +32,8 @@ class Game
     @losses = 0
     @draws = 0
     @difficulty = ''
-    @player1 = player1
-    @player2 = player2
-    @current_player = player1
+    @player1 = Player.new
+    @player2 = Player.new
   end
 
   def start
@@ -56,17 +55,17 @@ class Game
 
   def take_turns
     @board.render
-    if @player1.turn == 'h'
+    if @player1.type == 'h'
       @board.place(@player1.letter, prompt)
-    elsif @player1.turn == 'c'
+    elsif @player1.type == 'c'
        @board.place(@player1.letter, pick(@player1))
        sleep(1.5)
     end
     @moves += 1
     @board.render("\nPlayer 2's turn...")
-    if @player2.turn == 'h'
+    if @player2.type == 'h'
       @board.place(@player2.letter, prompt)
-    elsif @player2.turn == 'c'
+    elsif @player2.type == 'c'
       @board.place(@player2.letter, pick(@player2))
       sleep(1.5)
     end
