@@ -28,32 +28,47 @@ module Prompter
 
   def humans_or_computers
     clear 
-    puts "Is player one a human or a computer?\n(h, c)"
+    puts "Is player ONE a human or a computer?\n(h, c)"
     answer = gets.chr.downcase
-     if answer == 'h'
-       @player1 = Human.new
-      elsif answer == 'c'
-        @player1 = Computer.new
-        selectdifficulty(@player1)
-      end
-      @player1.change_letter('X')
-    clear 
-    puts "What about player two?\n(h, c)"
+    if answer == 'h'
+      @player1 = Human.new
+    elsif answer == 'c'
+      @player1 = Computer.new
+      selectdifficulty(@player1)
+    else
+      humans_or_computers
+    end
+    @player1.change_letter('X')
+    clear
+    puts "Is player TWO a human or a computer?\n(h, c)"
     answer = gets.chr.downcase
-     if answer == 'h'
-        @player2 = Human.new
-     elsif answer == 'c'
-        @player2 = Computer.new
-        selectdifficulty(@player2)
-      end
-      @player2.change_letter('O')
-
-      
+    if answer == 'h'
+      @player2 = Human.new
+    elsif answer == 'c'
+      @player2 = Computer.new
+      selectdifficulty(@player2)
+    else
+      humans_or_computers
+    end
+    @player2.change_letter('O')
     sleep(1.5)
     puts "\nGood luck, have fun! Let the games begin!"
     sleep(1.5)
     play
   end
+
+  # def get_player(player, letter)
+  #   answer = gets.chr.downcase
+  #   if answer == 'h'
+  #     player = Human.new
+  #   elsif answer == 'c'
+  #     player = Computer.new
+  #     selectdifficulty(player)
+  #   else
+  #     humans_or_computers
+  #   end
+  #   player.change_letter(letter)
+  # end
 
   def playorquit
     loop do
