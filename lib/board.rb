@@ -49,7 +49,7 @@ class Board
       puts padding + next_row.join(" ")
       next_row.clear
     end
-    puts "\nP1 wins: #{@game.wins} - P2 wins: #{@game.losses} - Draws: #{@game.draws}\n" if @game.winner
+    puts "\nX wins: #{@game.wins} - O wins: #{@game.losses} - Draws: #{@game.draws}\n" if @game.winner
     # puts "Player2's record: #{@game.losses} - #{@game.wins} - #{@game.draws}\n" if @game.winner
     if @game.under && @game.winner
       puts "\nMoves: #{@game.moves}; Last winner: #{@game.winner}"

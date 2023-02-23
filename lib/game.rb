@@ -47,7 +47,7 @@ class Game
   def take_turns
     @board.render
     take_turn(@player1)
-    @board.render("Player 2's turn...")
+    @board.render("O's turn...")
     take_turn(@player2)
   end
 
@@ -66,10 +66,10 @@ class Game
     @winner = result
     case @winner
     when 'X'
-      @message = "Player1 WINS!!"
+      @message = "X WINS!!"
       @wins += 1
     when 'O'
-      @message = "Player2 WINS!!"
+      @message = "O WINS!!"
       @losses += 1
     when 'none'
       @message = "TIE GAME!?! Wow!!"

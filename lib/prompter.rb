@@ -76,7 +76,7 @@ module Prompter
     @player2.change_letter('O')
   
     sleep(1.5)
-    puts "\nGood luck, have fun! Let the games begin!"
+    puts "\nGood luck, have fun! Let the game begin!"
     sleep(1.5)
     play
   end
