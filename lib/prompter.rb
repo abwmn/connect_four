@@ -3,6 +3,86 @@ module Prompter
     puts "\e[H\e[2J"
   end
 
+  def playorquit
+    puts "Enter p to play, or q to quit!\n"
+    if @winner
+      puts "Enter s to select players, and r to reset all!"
+    end
+    answer = gets.chomp.downcase
+    case answer
+    when 'p'
+      if @winner
+        play
+      else
+        humans_or_computers
+      end
+    when 'q'
+      clear 
+      abort("See you next time!")
+    when 'r'
+      @wins, @losses, @draws = 0, 0, 0
+      @winner = false
+      humans_or_computers
+    when 's'
+      humans_or_computers
+    else
+      if !@under
+        clear
+        @board.render("...oh SNAP! #{@message} Good game!")
+        playorquit
+      else
+        start
+      end
+    end
+  end
+  
+  def humans_or_computers
+    [@player1, @player2].each do |player|
+      clear 
+      puts question = "Is player \"#{player.letter}\" a human or a computer?\n(h, c)"
+      answer = gets.chomp.downcase
+      until ['h', 'c'].include?(answer)
+        clear
+        puts question
+        answer = gets.chomp.downcase
+      end
+      case answer
+        when 'h'
+          player.type = 'h'
+        when 'c'
+          player.type = 'c'
+          player.difficulty = selectdifficulty
+      end
+    end
+    sleep(1.25)
+    puts "\nGood luck, have fun! Let the connex commence!"
+    sleep(1.25)
+    play
+  end
+  
+  def selectdifficulty
+    clear
+    puts question = "Please select difficulty!\nEasy, Medium, or HARD\n(e, m, h)"
+    answer = gets.chomp.downcase
+    until ['e', 'm', 'h', 'i'].include?(answer)
+      clear
+      puts question
+      answer = gets.chomp.downcase
+    end
+    clear
+    case answer
+      when 'e'
+        puts "You chose Easy!"
+      when 'm' 
+        puts "You chose Medium!"
+      when 'h'
+        puts "You chose HARD!!"
+      when 'i'
+        puts "Who told you about Insane mode?!"
+      end
+    answer
+  end
+
   def prompt
     columns = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6 }.freeze
     loop do
@@ -24,76 +104,5 @@ module Prompter
         @board.render
       end
     end
-  end
-
-  def humans_or_computers
-    clear 
-    puts "Is player one a human or a computer?\n(h, c)"
-    answer = gets.chr.downcase
-     if answer == 'h'
-       @player1 = Human.new
-      elsif answer == 'c'
-        @player1 = Computer.new
-        selectdifficulty(@player1)
-      end
-      @player1.change_letter('X')
-    clear 
-    puts "What about player two?\n(h, c)"
-    answer = gets.chr.downcase
-     if answer == 'h'
-        @player2 = Human.new
-     elsif answer == 'c'
-        @player2 = Computer.new
-        selectdifficulty(@player2)
-      end
-      @player2.change_letter('O')
-
-      
-    sleep(1.5)
-    puts "\nGood luck, have fun! Let the games begin!"
-    sleep(1.5)
-    play
-  end
-
-  def playorquit
-    loop do
-      puts "\nEnter p to play, or q to quit!\n"
-      case answer = gets.chr.downcase
-      when 'p'
-        humans_or_computers
-      when 'q'
-        clear 
-        abort("See you next time!")
-      else
-        if !@under
-          clear
-          @board.render("\noh SNAP! #{@message}\n")
-        else
-          start
-        end
-      end
-    end
-  end
-
-  def selectdifficulty(player)
-    clear
-    puts "Please select difficulty!\nEasy, Medium, or HARD\n(e, m, h)"
-    case answer = gets.chr.downcase
-    when 'e'
-      clear
-      puts "You chose Easy!"
-    when 'm' 
-      clear
-      puts "You chose Medium!"
-    when 'h'
-      clear
-      puts "You chose HARD!!"
-    when 'i'
-      clear
-      puts "Who told you about the Insane difficulty?!"
-    else
-      selectdifficulty(player)
-    end
-    player.difficulty = answer
   end
 end

@@ -1,8 +1,4 @@
-require_relative 'board'
-require_relative 'human_player'
-require_relative 'computer_player'
-require_relative 'player'
-require_relative 'prompter'
+require_relative 'requirements'
 class Game
   include Picker
   include Prompter
@@ -10,27 +6,25 @@ class Game
               :grid, 
               :under, 
               :winner,
-              :lastwinner,
               :moves,
-              :player_wins,
-              :foe_wins,
-              :draws,
+              :wins,
+              :losses,
+              :draws, 
               :player1,
               :player2
 
   def initialize
     @board = Board.new(self)
     @grid = @board.grid
+    @player1 = Player.new('X')
+    @player2 = Player.new('O')
     @under = true
     @winner = false
-    @lastwinner = false
     @message = ''
     @moves = 0
-    @player_wins = 0
-    @foe_wins = 0
+    @wins = 0
+    @losses = 0
     @draws = 0
-    @player1 = false
-    @player2 = false
   end
 
   def start
@@ -41,52 +35,47 @@ class Game
 
   def play
     reset
-    until !@under
-      take_turns
-    end
+    take_turns until !@under
   end
 
   def reset
     @under = true
-    @lastwinner = @winner
-    @winner = false
     @board.clear
     @moves = 0
   end
 
   def take_turns
     @board.render
-      if @player1.turn == 'h'
-        @board.place(@player1.letter, prompt)
-      elsif @player1.turn == 'c'
-       @board.place(@player1.letter, pick(@player1))
-      else
-        false
-      end
-    @moves += 1
-    @board.render("\nYour move player two!")
-    if @player2.turn == 'h'
-      @board.place(@player2.letter, prompt)
-    elsif @player2.turn == 'c'
-      sleep(1.5)
-     @board.place(@player2.letter, pick(@player2))
-    else
-      false
-    end
+    take_turn(@player1)
+    @board.render("O's turn...")
+    take_turn(@player2)
   end
 
-  def over(winner)
-    @under = false
-    @winner = winner
-    @message = case winner
-    when 'X'
-      "you WIN!! Good game!"
-    when 'O'
-      "you LOSE. Better luck next time!"
-    when 'draw'
-      "TIE GAME!?! Wow!! Good game!"
+  def take_turn(player)
+    if player.type == 'h'
+      @board.place(player.letter, prompt)
+    elsif player.type == 'c'
+      @board.place(player.letter, pick(player))
+      sleep(1)
     end
-    @board.render("\noh SNAP! #{@message}")
+    @moves +=1
+  end
+
+  def over(result)
+    @under = false
+    @winner = result
+    case @winner
+    when 'X'
+      @message = "X WINS!!"
+      @wins += 1
+    when 'O'
+      @message = "O WINS!!"
+      @losses += 1
+    when 'none'
+      @message = "TIE GAME!?! Wow!!"
+      @draws += 1
+    end
+    @board.render("...oh SNAP! #{@message} Good game!")
     sleep(2)
     playorquit
   end
