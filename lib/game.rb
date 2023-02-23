@@ -16,8 +16,7 @@ class Game
               :foe_wins,
               :draws,
               :player1,
-              :player2, 
-              :current_player
+              :player2
 
   def initialize
     @board = Board.new(self)
@@ -30,10 +29,8 @@ class Game
     @player_wins = 0
     @foe_wins = 0
     @draws = 0
-    @difficulty = ''
-    @player1 = player1
-    @player2 = player2
-    @current_player = player1
+    @player1 = false
+    @player2 = false
   end
 
   def start
