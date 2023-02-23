@@ -50,7 +50,7 @@ class Node
       if self.next_empty?(fore, letter) && 
          self.next_empty?(aft, letter)  &&
          self.count(fore) + self.count(aft) + 1 == 3
-          return true
+       return true
       end
     end
     false
