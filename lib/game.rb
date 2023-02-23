@@ -60,19 +60,17 @@ class Game
       @board.place(@player1.letter, prompt)
     elsif @player1.turn == 'c'
        @board.place(@player1.letter, pick(@player1))
-    else
-      false
+       sleep(1.5)
     end
     @moves += 1
-    @board.render("\nYour move player two!")
+    @board.render("\nPlayer 2's turn...")
     if @player2.turn == 'h'
       @board.place(@player2.letter, prompt)
     elsif @player2.turn == 'c'
-      sleep(1.5)
       @board.place(@player2.letter, pick(@player2))
-    else
-      false
+      sleep(1.5)
     end
+    @moves += 1
   end
 
   def over(result)
