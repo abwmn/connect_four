@@ -50,60 +50,66 @@ module Picker
 
   def hard_pick(letter, other_letter)
     return rand(0..6) if @moves < 4
-    movescores = {}
+    hardscores = {}
     (0..6).each do |col|
       node = @grid[col].find { |node| node.empty?}
       if node && node.connect?(4, letter)
-        return col
+        hardscores[col] = 5
       elsif node && node.connect?(4, other_letter)
-        movescores[col] = 4
+        hardscores[col] = 4
       elsif node && node.connect?(3, letter)
         if !node.n && node.count('s', letter) == 2
-          movescores[col] = 1
+          hardscores[col] = 1
         else  
-          movescores[col] = 3
+          hardscores[col] = 3
         end
       elsif node
-        movescores[col] = node.connect(letter)
+        hardscores[col] = node.connect(letter)
       else
-        movescores[col] = 0
+        hardscores[col] = 0
       end
     end 
-    movescores.keys.find_all do |key| 
-      movescores[key] == movescores.values.max
+    hardscores.keys.find_all do |key| 
+      hardscores[key] == hardscores.values.max
     end.sample 
   end
 
   def insane_pick(letter, other_letter)
     return rand(0..6) if @moves < 2
-    movescores = {}
+    insanescores = {}
     (0..6).each do |col|
       node = @grid[col].find { |node| node.empty?}
       if node && node.connect?(4, letter)
         return col
       elsif node && node.connect?(4, other_letter)
         if node.any_traps?(letter)
-          movescores[col] = 6
+          insanescores[col] = 6
         else
-          movescores[col] = 5
+          insanescores[col] = 5
         end
       elsif node && node.connect?(3, letter)
         if !node.n && node.count('s', letter) == 2
-          movescores[col] = 1
+          insanescores[col] = 1
         else
-          movescores[col] = 3
+          insanescores[col] = 3
         end
         if node.any_traps?(letter)
-          movescores[col] = 4
+          insanescores[col] = 4
         end
+        look_ahead_node = node
+        look_ahead_node.letter = letter
+        if hard_pick(other_letter, letter) == 5
+          insanescores[col] =1
+        end
+        node.letter = '.'
       elsif node
-        movescores[col] = node.connect(letter)
+        insanescores[col] = node.connect(letter)
       else
-        movescores[col] = 0
+        insanescores[col] = 0
       end
     end 
-    movescores.keys.find_all do |key| 
-      movescores[key] == movescores.values.max
+    insanescores.keys.find_all do |key| 
+      insanescores[key] == insanescores.values.max
     end.sample 
   end
 end
