@@ -39,7 +39,7 @@ class Board
 
   def render(message=nil)
     puts "\e[H\e[2J"
-    padding = '      '
+    padding = '        '
     puts padding + 'A B C D E F G'
     next_row = []
     (0..5).reverse_each do |row|
