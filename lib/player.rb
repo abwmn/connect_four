@@ -1,10 +1,8 @@
 class Player
-  attr_reader :letter
-  def initialize(game)
+  attr_reader :letter, :turn
+  def initialize
     @letter = ''
-    @game = game
-    @human = false
-    @computer = false
+    @turn = ''
   end
   
   def change_letter(new_letter)
