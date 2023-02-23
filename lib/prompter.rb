@@ -82,4 +82,27 @@ module Prompter
       end
     answer
   end
+
+  def prompt
+    columns = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6 }.freeze
+    loop do
+      print "\nEnter A-G to place your X, or R for random!\n"
+      # print "or \"check\" to test your move!\n"
+      answer = gets.chomp.downcase
+      if columns.key?(answer) && @grid[columns[answer]][5].empty?
+        return columns[answer]
+      elsif answer == 'r'
+        col = nil
+        loop do 
+          col = rand(0..6)
+          node = @grid[col].find{|node| node.empty?}
+          break if node
+        end
+        return col
+      else
+        clear
+        @board.render
+      end
+    end
+  end
 end
