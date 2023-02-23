@@ -1,8 +1,13 @@
 class Player
-  attr_reader :letter, :turn
+  attr_accessor :letter, :type, :difficulty
   def initialize
     @letter = ''
-    @turn = ''
+    @type = ''
+    @difficulty = ''
+  end
+
+  def set(type)
+    @type = turn
   end
   
   def change_letter(new_letter)
