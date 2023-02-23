@@ -97,7 +97,8 @@ module Picker
           insanescores[col] = 4
         end
         node.letter = letter
-        if hard_pick(other_letter, letter) >= 5
+        # require 'pry'; binding.pry
+        if @grid[hard_pick(other_letter, letter)].find{|node|node.empty?}.connect?(4, other_letter)
           insanescores[col] = 0.5
         end
         node.letter = '.'
