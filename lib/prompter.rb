@@ -28,13 +28,26 @@ module Prompter
 
   def playorquit
     puts "Enter p to play, or q to quit!\n"
+    if @winner
+      puts "Enter s to select players, and r to reset all!"
+    end
     answer = gets.chomp.downcase
     case answer
     when 'p'
-      humans_or_computers
+      if @winner
+        play
+      else
+        humans_or_computers
+      end
     when 'q'
       clear 
       abort("See you next time!")
+    when 'r'
+      @wins, @losses, @draws = 0, 0, 0
+      @winner = false
+      humans_or_computers
+    when 's'
+      humans_or_computers
     else
       if !@under
         clear
