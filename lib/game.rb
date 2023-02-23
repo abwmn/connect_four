@@ -56,7 +56,7 @@ class Game
       @board.place(player.letter, prompt)
     elsif player.type == 'c'
       @board.place(player.letter, pick(player))
-      # sleep(1.2)
+      sleep(1)
     end
     @moves +=1
   end
