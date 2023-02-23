@@ -11,8 +11,7 @@ class Game
               :losses,
               :draws, 
               :player1,
-              :player2,
-              :looks_ahead
+              :player2
 
   def initialize
     @board = Board.new(self)
@@ -26,7 +25,6 @@ class Game
     @wins = 0
     @losses = 0
     @draws = 0
-    @looks_ahead = 0
   end
 
   def start

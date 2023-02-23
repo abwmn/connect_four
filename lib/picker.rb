@@ -97,14 +97,14 @@ module Picker
           insanescores[col] = 4
         end
         node.letter = letter
-        if hard_pick(other_letter, letter) == 5
+        if hard_pick(other_letter, letter) >= 5
           insanescores[col] = 0.5
         end
         node.letter = '.'
       elsif node
         insanescores[col] = node.connect(letter)
         node.letter = letter
-        if hard_pick(other_letter, letter) == 5
+        if hard_pick(other_letter, letter) >= 5
           insanescores[col] = 0.5
         end
         node.letter = '.'
