@@ -1,7 +1,7 @@
 class Player
   attr_accessor :letter, :type, :difficulty
-  def initialize
-    @letter = ''
+  def initialize(letter = 'X')
+    @letter = letter
     @type = ''
     @difficulty = ''
   end
