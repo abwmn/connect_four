@@ -16,8 +16,8 @@ class Game
   def initialize
     @board = Board.new(self)
     @grid = @board.grid
-    @player1 = Player.new
-    @player2 = Player.new
+    @player1 = Player.new('X')
+    @player2 = Player.new('O')
     @under = true
     @winner = false
     @message = ''
