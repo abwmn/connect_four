@@ -10,7 +10,7 @@ RSpec.describe Player do
   end
 
   it 'has letter' do
-    expect(@player.letter).to eq('')
+    expect(@player.letter).to eq('X')
   end
 
   it 'changes letter' do
