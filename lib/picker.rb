@@ -1,4 +1,4 @@
-require_relative 'board'
+require_relative 'requirements'
 module Picker
   def pick(player)
     case player.difficulty

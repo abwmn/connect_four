@@ -1,10 +1,4 @@
-require_relative 'board'
-require_relative 'human_player'
-require_relative 'computer_player'
-require_relative 'player'
-require_relative 'prompter'
-require_relative 'picker'
-require_relative 'prompter'
+require_relative 'requirements'
 class Game
   include Picker
   include Prompter
@@ -12,18 +6,18 @@ class Game
               :grid, 
               :under, 
               :winner,
-              :lastwinner,
               :moves,
               :wins,
               :losses,
               :draws, 
-              :current_player
-  attr_accessor :player1,
-                :player2
+              :player1,
+              :player2
 
   def initialize
     @board = Board.new(self)
     @grid = @board.grid
+    @player1 = Player.new
+    @player2 = Player.new
     @under = true
     @winner = false
     @message = ''
@@ -31,9 +25,6 @@ class Game
     @wins = 0
     @losses = 0
     @draws = 0
-    @difficulty = ''
-    @player1 = Player.new
-    @player2 = Player.new
   end
 
   def start
@@ -55,21 +46,19 @@ class Game
 
   def take_turns
     @board.render
-    if @player1.type == 'h'
-      @board.place(@player1.letter, prompt)
-    elsif @player1.type == 'c'
-       @board.place(@player1.letter, pick(@player1))
-       sleep(1.2)
-    end
-    @moves += 1
+    take_turn(@player1)
     @board.render("Player 2's turn...")
-    if @player2.type == 'h'
-      @board.place(@player2.letter, prompt)
-    elsif @player2.type == 'c'
-      @board.place(@player2.letter, pick(@player2))
+    take_turn(@player2)
+  end
+
+  def take_turn(player)
+    if player.type == 'h'
+      @board.place(player.letter, prompt)
+    elsif player.type == 'c'
+      @board.place(player.letter, pick(player))
       sleep(1.2)
     end
-    @moves += 1
+    @moves +=1
   end
 
   def over(result)

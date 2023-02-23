@@ -1,7 +1,5 @@
-require_relative 'picker'
-require_relative 'player'
-require_relative 'node'
-require_relative 'board'
+require_relative 'Picker'
+require_relative 'Player'
 class Computer < Player
   include Picker
   attr_accessor :difficulty

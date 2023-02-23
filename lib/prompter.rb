@@ -27,7 +27,7 @@ module Prompter
   end
 
   def playorquit
-    puts "\nEnter p to play, or q to quit!\n"
+    puts "Enter p to play, or q to quit!\n"
     answer = gets.chomp.downcase
     case answer
     when 'p'
@@ -38,7 +38,7 @@ module Prompter
     else
       if !@under
         clear
-        @board.render("\noh SNAP! #{@message}")
+        @board.render("...oh SNAP! #{@message} Good game!")
         playorquit
       else
         start
@@ -82,19 +82,17 @@ module Prompter
   end
   
   def selectdifficulty
-    clear
     valid_inputs = ['e', 'm', 'h', 'i']
     
+    clear
     puts "Please select difficulty!\nEasy, Medium, or HARD\n(e, m, h)"
-    
     answer = gets.chomp.downcase
-    
     until valid_inputs.include?(answer)
       clear
       puts "Please select difficulty!\nEasy, Medium, or HARD\n(e, m, h)"
       answer = gets.chomp.downcase
     end
-    
+
     case answer
     when 'e'
       clear

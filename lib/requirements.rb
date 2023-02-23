@@ -1,0 +1,7 @@
+require_relative 'board'
+require_relative 'human_player'
+require_relative 'computer_player'
+require_relative 'player'
+require_relative 'prompter'
+require_relative 'picker'
+require_relative 'prompter'
