@@ -96,14 +96,18 @@ module Picker
         if node.any_traps?(letter)
           insanescores[col] = 4
         end
-        look_ahead_node = node
-        look_ahead_node.letter = letter
+        node.letter = letter
         if hard_pick(other_letter, letter) == 5
-          insanescores[col] =1
+          insanescores[col] = 0.5
         end
         node.letter = '.'
       elsif node
         insanescores[col] = node.connect(letter)
+        node.letter = letter
+        if hard_pick(other_letter, letter) == 5
+          insanescores[col] = 0.5
+        end
+        node.letter = '.'
       else
         insanescores[col] = 0
       end
