@@ -20,7 +20,7 @@ module Picker
   end
   
   def easy_pick
-    col = 10
+    col = nil
     loop do
       col = rand(0..6)
       node = @grid[col].find {|node| node.empty? }
@@ -97,15 +97,14 @@ module Picker
           insanescores[col] = 4
         end
         node.letter = letter
-        # require 'pry'; binding.pry
-        if @grid[hard_pick(other_letter, letter)].find{|node|node.empty?}.connect?(4, other_letter)
+        if @grid[hard_pick(other_letter, letter)].find{|node|node.empty?}&.connect?(4, other_letter)
           insanescores[col] = 0.5
         end
         node.letter = '.'
       elsif node
         insanescores[col] = node.connect(letter)
         node.letter = letter
-        if @grid[hard_pick(other_letter, letter)].find{|node|node.empty?}.connect?(4, other_letter)
+        if @grid[hard_pick(other_letter, letter)].find{|node|node.empty?}&.connect?(4, other_letter)
           insanescores[col] = 0.5
         end
         node.letter = '.'
