@@ -11,7 +11,8 @@ class Game
               :losses,
               :draws, 
               :player1,
-              :player2
+              :player2,
+              :count
 
   def initialize
     @board = Board.new(self)
@@ -25,6 +26,8 @@ class Game
     @wins = 0
     @losses = 0
     @draws = 0
+    @count = 0
+    @start = 0
   end
 
   def start
@@ -45,7 +48,7 @@ class Game
   end
 
   def take_turns
-    @board.render
+    @board.render("X's turn...")
     take_turn(@player1)
     @board.render("O's turn...")
     take_turn(@player2)
@@ -53,10 +56,11 @@ class Game
 
   def take_turn(player)
     if player.type == 'h'
-      @board.place(player.letter, prompt)
+      @board.place(player.letter, prompt(player.letter))
     elsif player.type == 'c'
       @board.place(player.letter, pick(player))
-      sleep(1)
+      # normal only:
+      # sleep(0.1)
     end
     @moves +=1
   end
@@ -76,7 +80,16 @@ class Game
       @draws += 1
     end
     @board.render("...oh SNAP! #{@message} Good game!")
-    sleep(2)
-    playorquit
+    # normal:
+    # sleep(1)
+    # playorquit
+    # autoplay:
+    if @count < 999
+      @count += 1
+      play
+    else
+      puts "Runtime: #{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - @start).round(2)} sec"
+      playorquit
+    end
   end
 end

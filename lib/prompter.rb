@@ -12,6 +12,10 @@ module Prompter
     case answer
     when 'p'
       if @winner
+        # autoplay only:
+        @wins, @losses, @draws, @count = 0, 0, 0, 0
+        @start = Process.clock_gettime(Process::CLOCK_MONOTONIC) 
+        #normal: 
         play
       else
         humans_or_computers
@@ -54,9 +58,10 @@ module Prompter
           player.difficulty = selectdifficulty
       end
     end
-    sleep(1.25)
+    sleep(0.5)
     puts "\nGood luck, have fun! Let the connex commence!"
-    sleep(1.25)
+    sleep(1)
+    @start = Process.clock_gettime(Process::CLOCK_MONOTONIC) 
     play
   end
   
@@ -83,14 +88,14 @@ module Prompter
     answer
   end
 
-  def prompt
+  def prompt(letter)
     columns = { 'a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4, 'f' => 5, 'g' => 6 }.freeze
     loop do
-      print "\nEnter A-G to place your X, or R for random!\n"
+      print "\nEnter A-G to place your #{letter}, or R for random!\n"
       # print "or \"check\" to test your move!\n"
-      answer = gets.chomp.downcase
-      if columns.key?(answer) && @grid[columns[answer]][5].empty?
-        return columns[answer]
+      ans = gets.chomp.downcase
+      if columns.key?(ans) && @grid[columns[ans]][5].empty?
+        return columns[ans]
       elsif answer == 'r'
         col = nil
         loop do 
