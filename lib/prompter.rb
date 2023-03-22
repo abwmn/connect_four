@@ -96,7 +96,7 @@ module Prompter
       ans = gets.chomp.downcase
       if columns.key?(ans) && @grid[columns[ans]][5].empty?
         return columns[ans]
-      elsif answer == 'r'
+      elsif ans == 'r'
         col = nil
         loop do 
           col = rand(0..6)
