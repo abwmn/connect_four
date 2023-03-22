@@ -60,7 +60,7 @@ class Game
     elsif player.type == 'c'
       @board.place(player.letter, pick(player))
       # normal only:
-      # sleep(0.1)
+      sleep(0.1)
     end
     @moves +=1
   end
@@ -81,15 +81,15 @@ class Game
     end
     @board.render("...oh SNAP! #{@message} Good game!")
     # normal:
-    # sleep(1)
-    # playorquit
-    # autoplay:
-    if @count < 999
-      @count += 1
-      play
-    else
-      puts "Runtime: #{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - @start).round(2)} sec"
-      playorquit
-    end
+    sleep(1)
+    playorquit
+    # autoplay 1000 games:
+    # if @count < 999
+    #   @count += 1
+    #   play
+    # else
+    #   puts "Runtime: #{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - @start).round(2)} sec"
+    #   playorquit
+    # end
   end
 end
