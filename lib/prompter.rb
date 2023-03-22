@@ -13,8 +13,8 @@ module Prompter
     when 'p'
       if @winner
         # autoplay only:
-        @wins, @losses, @draws, @count = 0, 0, 0, 0
-        @start = Process.clock_gettime(Process::CLOCK_MONOTONIC) 
+        # @wins, @losses, @draws, @count = 0, 0, 0, 0
+        # @start = Process.clock_gettime(Process::CLOCK_MONOTONIC) 
         #normal: 
         play
       else
